@@ -6,6 +6,7 @@ Desktop.ini
 # Editors
 .idea/
 .vscode/
+.vs/
 *.swp
 *.swo
 
