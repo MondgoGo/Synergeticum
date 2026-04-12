@@ -1,7 +1,3 @@
-Áno. Spravím ti to ako **4 modely × odporúčaný git projekt × poznámka k 3 režimom**.
-
-Môj cieľ tu nie je „najkrajší research stack“, ale **najrýchlejšie použiteľný základ**, ktorý sa dá nasadiť na mobile a neskôr zapojiť do lokálneho učenia a občasného syncu.
-
 ## 1. Vision model
 
 **Model:** MobileNetV3 Small
