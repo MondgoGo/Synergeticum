@@ -590,7 +590,652 @@ app/
 
 ---
 
-## 15. Zhrnutie
+## 15. P2P architektúra
+
+Táto sekcia rozpracúva decentralizovanú synchronizačnú vrstvu detailnejšie. Cieľom nie je plne otvorená anonymná peer-to-peer sieť, ale kontrolovaná mikro-federácia medzi dôveryhodnými zariadeniami.
+
+### 15.1 Charakter P2P siete
+
+Navrhovaná P2P vrstva má tieto vlastnosti:
+
+* uzly sú známe alebo vopred schválené,
+* synchronizácia nie je permanentná, ale epizodická,
+* sieť nemusí byť stále online,
+* každý peer je primárne osobný klient a iba niekedy sa podieľa na koordinácii,
+* P2P vrstva je doplnkom k osobným modelom, nie ich náhradou.
+
+To znamená, že nejde o klasickú otvorenú P2P sieť ako verejný blockchainový mesh. Ide skôr o trust-aware sync mesh.
+
+### 15.2 Typy uzlov
+
+Každé zariadenie môže vystupovať v jednej alebo viacerých rolách:
+
+#### Personal Client Node
+
+Základná rola každého zariadenia.
+
+Úlohy:
+
+* lokálna inferencia,
+* lokálny tréning,
+* ukladanie osobných dát,
+* rozhodovanie o tom, čo smie byť zdieľané.
+
+#### Sync Peer Node
+
+Uzol, ktorý vie prijímať a odosielať synchronizačné artefakty v trusted circle.
+
+Úlohy:
+
+* publikovanie vlastných model updateov,
+* prijímanie updateov od dôveryhodných peerov,
+* výmena verzií a metadát.
+
+#### Temporary Coordinator Node
+
+Dočasne zvolený uzol, ktorý počas konkrétneho sync okna koordinuje výmenu updateov.
+
+Úlohy:
+
+* zozbieranie updateov,
+* vykonanie agregácie,
+* rozoslanie agregovaného checkpointu,
+* vedenie session state pre dané sync okno.
+
+#### Relay Node
+
+Voliteľná rola pre peer, ktorý sprostredkuje komunikáciu medzi časťami trusted siete, ak nie sú priamo viditeľné.
+
+Táto rola sa má používať opatrne a len ak je sieť väčšia alebo členovia nie sú priamo dostupní.
+
+### 15.3 Preferovaná P2P topológia
+
+Odporúčaná topológia pre prvé fázy nie je full mesh medzi všetkými zariadeniami naraz, ale:
+
+* small trusted mesh,
+* star-with-rotating-leader,
+* alebo clustered circles.
+
+#### Small Trusted Mesh
+
+Malá skupina 3–10 peerov, ktorí sa navzájom poznajú a majú whitelist spojení.
+
+Výhody:
+
+* jednoduchý trust model,
+* nižšia komplexita,
+* menšie riziko poisoning útokov.
+
+#### Star with Rotating Leader
+
+Na každé sync okno sa zvolí jeden leader. Všetci ostatní peeri komunikujú primárne s ním.
+
+Výhody:
+
+* jednoduchšia agregácia,
+* nižšia sieťová zložitosť,
+* stále decentralizovanejšie než fixný server.
+
+#### Clustered Circles
+
+Viac trusted circles, ktoré si primárne syncujú lokálne modely vo vnútri skupiny. Medzi skupinami sa zdieľa len veľmi obmedzená vrstva znalostí.
+
+Tento model je vhodný pre neskoršiu fázu škálovania.
+
+### 15.4 Peer discovery
+
+Objavovanie peerov musí byť konzervatívne a bezpečné.
+
+Odporúčaný návrh:
+
+* manuálne pozvanie peerov,
+* QR onboarding alebo invitation token,
+* lokálne objavenie cez LAN / Wi‑Fi v trusted prostredí,
+* možnosť centrálneho bootstrap directory len pre zistenie dostupnosti peerov, nie pre ukladanie dát.
+
+Peer discovery nesmie automaticky znamenať dôveru. Objavenie peeru je len technický krok. Dôvera musí byť explicitne potvrdená.
+
+### 15.5 Trust establishment
+
+Každý peer má:
+
+* device identity,
+* user identity,
+* group membership,
+* kryptografický kľúč alebo podpisový identifikátor,
+* úroveň dôvery.
+
+Minimálny trust model:
+
+* peer je explicitne schválený,
+* peer patrí do povolenej skupiny,
+* peer podpisuje updatey,
+* peer má kompatibilnú verziu modelového modulu.
+
+### 15.6 Leader election
+
+Keďže koordinácia je epizodická, leader election je dôležitá.
+
+Odporúčané pravidlá pre výber leadera:
+
+* zariadenie je na Wi‑Fi,
+* zariadenie sa nabíja alebo má vysokú batériu,
+* zariadenie je idle,
+* zariadenie má dostatok výpočtových zdrojov,
+* zariadenie je trusted a má kompatibilnú verziu,
+* zariadenie bolo nedávno online a má dobrú reputáciu v skupine.
+
+Jednoduchá stratégia:
+
+* deterministic ranking podľa device score,
+* fallback na ďalší peer, ak leader odpadne.
+
+### 15.7 Sync session flow
+
+Navrhovaný priebeh jednej synchronizačnej session:
+
+1. Peer discovery nájde dostupných trusted peerov.
+2. Permission layer overí, či je sync pre daný modul povolený.
+3. Leader election vyberie dočasného koordinátora.
+4. Každý peer pošle session metadata:
+
+   * model version,
+   * module type,
+   * local sample count,
+   * quality score,
+   * capability info.
+5. Leader rozhodne, ktorí peeri sú eligible pre daný sync cyklus.
+6. Eligible peeri pošlú model artifacts podľa režimu:
+
+   * full module update,
+   * selected layers,
+   * embeddings,
+   * distilled outputs,
+   * anonymized statistics.
+7. Leader vykoná agregáciu alebo knowledge merge.
+8. Leader rozpošle candidate checkpoint.
+9. Každý peer vykoná local validation gate.
+10. Ak candidate checkpoint prejde, peer ho prijme alebo čiastočne merge-ne.
+11. Session sa ukončí a zapíšu sa výsledky syncu.
+
+### 15.8 P2P synchronizačné artefakty
+
+P2P vrstva nemá byť obmedzená len na plné váhové updatey.
+
+Možné artefakty:
+
+* module weights,
+* selected layer deltas,
+* embeddings,
+* logits,
+* prototypes,
+* class centroids,
+* anonymized summary statistics,
+* distilled teacher outputs,
+* quality metrics,
+* compatibility metadata.
+
+Toto je dôležité pre flexibilitu medzi Solo, Trusted Circle a Community Assist režimami.
+
+### 15.9 P2P bezpečnostná vrstva
+
+Každá sync session musí mať minimálne:
+
+* peer authentication,
+* signed payloads,
+* version checks,
+* session nonce alebo anti-replay mechanizmus,
+* update size limits,
+* validation gate pred prijatím modelu.
+
+Voliteľne:
+
+* trust score peerov,
+* penalizácia peerov s nekvalitnými updateami,
+* reputačný systém v trusted circle,
+* soft quarantine pre problematické uzly.
+
+### 15.10 P2P limity a realistické hranice
+
+P2P architektúra je vhodná:
+
+* pre malé trusted circles,
+* pre epizodické synchronizácie,
+* pre silno personalizované modely,
+* pre prípady, kde súkromie a autonómia majú vysokú prioritu.
+
+P2P architektúra nie je vhodná ako prvý krok pre:
+
+* masívne otvorené siete,
+* vysokofrekvenčný sync,
+* veľké foundation modely,
+* real-time coordination medzi nestabilnými mobilmi.
+
+Základné odporúčanie ostáva:
+
+* začať s mikro-federáciou,
+* držať malé trusted circles,
+* používať rotating leader model,
+* full open P2P nechať mimo prvých verzií.
+
+---
+
+## 16. Návrh implementácie
+
+Táto sekcia prekladá koncept do implementačnej kostry. Cieľom nie je detailný zdrojový kód, ale dostatočne konkrétny návrh komponentov, tokov a zodpovedností.
+
+### 16.1 Implementačné princípy
+
+* mobile-first,
+* offline-first,
+* modular first,
+* permission-driven sync,
+* deterministic versioning,
+* conservative acceptance of external updates.
+
+### 16.2 Logické komponenty
+
+#### A. Model Runtime Layer
+
+Zodpovednosť:
+
+* loading modelov,
+* inference,
+* lokálny tréning,
+* export a import model artifacts.
+
+Komponenty:
+
+* VisionRuntime
+* TextRuntime
+* HealthRuntime
+* BehaviorRuntime
+* FusionRuntime
+
+#### B. Data and Feature Layer
+
+Zodpovednosť:
+
+* lokálne ukladanie vstupov,
+* transformácia raw dát na feature sety,
+* správa dataset windows pre tréning.
+
+Komponenty:
+
+* LocalEventStore
+* FeatureExtractor
+* FeatureCache
+* TrainingWindowBuilder
+* ModelStore
+
+#### C. Permission and Trust Layer
+
+Zodpovednosť:
+
+* vyhodnotenie pravidiel zdieľania,
+* správa trusted circle,
+* peer whitelist a group membership.
+
+Komponenty:
+
+* PermissionEngine
+* TrustGraphService
+* SharingPolicyResolver
+* PeerRegistry
+
+#### D. Sync and P2P Layer
+
+Zodpovednosť:
+
+* peer discovery,
+* session orchestration,
+* leader election,
+* exchange payloadov,
+* merge a validation.
+
+Komponenty:
+
+* SyncManager
+* PeerDiscoveryService
+* SessionCoordinator
+* LeaderElectionService
+* PayloadSerializer
+* MergeEngine
+* ValidationGate
+* RollbackManager
+
+#### E. Versioning and Observability Layer
+
+Zodpovednosť:
+
+* správa verzií modelov,
+* audit sync session,
+* diagnostika problémov.
+
+Komponenty:
+
+* ModelVersionRegistry
+* SyncAuditLog
+* QualityMetricsStore
+* ExperimentFlags
+
+### 16.3 Odporúčaná implementačná štruktúra
+
+```text
+core/
+  models/
+    vision/
+    text/
+    health/
+    behavior/
+    fusion/
+  runtime/
+    model_runtime/
+    training/
+    inference/
+    export_import/
+  data/
+    local_event_store/
+    feature_extractor/
+    training_windows/
+    feature_cache/
+    model_store/
+  permissions/
+    permission_engine/
+    trust_graph/
+    peer_registry/
+    sharing_policy/
+  sync/
+    sync_manager/
+    peer_discovery/
+    session_coordinator/
+    leader_election/
+    payloads/
+    merge_engine/
+    validation_gate/
+    rollback/
+  versioning/
+    model_versions/
+    checkpoints/
+    audit_logs/
+  platform/
+    battery_network_state/
+    background_jobs/
+    device_capabilities/
+  ui/
+    sync_modes/
+    trusted_circle/
+    privacy_controls/
+    model_status/
+```
+
+### 16.4 Kľúčové dátové entity
+
+#### UserModelProfile
+
+Obsah:
+
+* user_id,
+* active_mode,
+* enabled_modules,
+* trust settings,
+* sharing preferences,
+* merge preferences.
+
+#### ModuleCheckpoint
+
+Obsah:
+
+* module_type,
+* version,
+* parent_version,
+* artifact_type,
+* created_at,
+* source_type,
+* quality_metrics,
+* compatibility_metadata.
+
+#### PeerIdentity
+
+Obsah:
+
+* peer_id,
+* device_id,
+* public_key,
+* trust_level,
+* group_ids,
+* capability_flags,
+* last_seen.
+
+#### SyncSession
+
+Obsah:
+
+* session_id,
+* module_type,
+* leader_peer_id,
+* participant_peer_ids,
+* start_time,
+* end_time,
+* sync_mode,
+* result,
+* accepted_checkpoint_version,
+* rollback_flag.
+
+#### SharingPolicy
+
+Obsah:
+
+* module_type,
+* share_mode,
+* allowed_groups,
+* artifact_types_allowed,
+* battery_threshold,
+* wifi_required,
+* charging_required,
+* validation_requirements.
+
+### 16.5 Implementačný flow na zariadení
+
+#### Lokálny tréning
+
+1. LocalEventStore zbiera údaje.
+2. FeatureExtractor ich transformuje na modulové features.
+3. TrainingWindowBuilder vytvorí tréningový input.
+4. Model runtime vykoná lokálny fine-tuning.
+5. Výsledok sa uloží ako nový local checkpoint.
+6. QualityMetricsStore zaznamená lokálnu kvalitu.
+
+#### Lokálna inferencia
+
+1. Modul dostane vstup.
+2. Runtime vráti prediction alebo embedding.
+3. FusionRuntime spojí výstupy.
+4. UI alebo ďalšia logika použije finálny výsledok.
+
+#### Sync rozhodovanie
+
+1. SyncManager zistí device state.
+2. PermissionEngine overí sharing policy.
+3. PeerDiscoveryService nájde trusted peers.
+4. Ak sú splnené podmienky, SessionCoordinator spustí sync session.
+
+### 16.6 Implementačný flow pri Trusted Circle syncu
+
+1. SyncManager spustí peer discovery.
+2. PeerRegistry vráti len whitelist peerov.
+3. LeaderElectionService vyberie leadera.
+4. SessionCoordinator vytvorí SyncSession.
+5. Participant peers pošlú eligibility metadata.
+6. Leader vyhodnotí kompatibilitu.
+7. Peerom požiada payloady podľa povoleného artifact typu.
+8. MergeEngine vykoná agregáciu alebo merge.
+9. Candidate checkpoint sa pošle účastníkom.
+10. ValidationGate spraví local acceptance test.
+11. Ak test prejde, RollbackManager uloží predchádzajúci checkpoint a nový sa aktivuje.
+12. Audit log zaznamená session výsledok.
+
+### 16.7 Merge stratégie
+
+#### Strategy A: Full module averaging
+
+Použitie:
+
+* len keď ide o rovnaký model,
+* malé trusted skupiny,
+* nízka heterogenita.
+
+#### Strategy B: Weighted merge
+
+Použitie:
+
+* keď chceš zohľadniť:
+
+  * sample count,
+  * trust score,
+  * validation quality,
+  * freshness.
+
+#### Strategy C: Knowledge merge
+
+Použitie:
+
+* embeddings,
+* logits,
+* distillation outputs,
+* centroids.
+
+#### Strategy D: Foundation plus personal delta update
+
+Použitie:
+
+* shared foundation sa opatrne vylepší,
+* personal delta ostáva lokálna.
+
+Odporúčanie:
+
+* začať s B alebo D,
+* A používať len tam, kde je to technicky čisté,
+* C zaviesť neskôr pre Community Assist.
+
+### 16.8 Validation gate
+
+Každý externý checkpoint musí prejsť cez lokalny validačný mechanizmus.
+
+ValidationGate má overiť:
+
+* kompatibilitu verzie,
+* platnosť podpisu,
+* rozumnú veľkosť payloadu,
+* základné sanity metrics,
+* nezhoršenie lokálneho validačného skóre,
+* súlad s PermissionEngine pravidlami.
+
+Ak checkpoint neprejde:
+
+* odmietnuť ho,
+* zalogovať dôvod,
+* ponechať lokálny model nezmenený.
+
+### 16.9 Rollback mechanizmus
+
+Pred prijatím externého checkpointu treba:
+
+* uložiť predchádzajúci aktívny checkpoint,
+* označiť candidate checkpoint ako pending,
+* po úspešnom validačnom teste ho aktivovať,
+* pri probléme sa vrátiť na predchádzajúcu verziu.
+
+Rollback je povinný, nie voliteľný.
+
+### 16.10 Odporúčaný implementačný rollout
+
+#### Iterácia 1
+
+* Health model,
+* Solo režim,
+* lokálne checkpointy,
+* fusion layer len minimálna alebo žiadna.
+
+#### Iterácia 2
+
+* Trusted Circle pre Health,
+* peer registry,
+* Wi‑Fi + battery gating,
+* manual session start alebo nightly sync.
+
+#### Iterácia 3
+
+* rotating leader,
+* validation gate,
+* rollback,
+* audit log.
+
+#### Iterácia 4
+
+* Behavior model,
+* foundation + personal delta princíp,
+* weighted merge.
+
+#### Iterácia 5
+
+* Vision modul,
+* richer sync payloads,
+* community assist artifacts.
+
+#### Iterácia 6
+
+* Text modul,
+* jemnejšie privacy a sharing policies,
+* experimenty s knowledge merge.
+
+### 16.11 UX návrh implementácie režimov
+
+Používateľ nemá vidieť komplexitu federácie. Má si vybrať jednoduchý režim.
+
+#### Solo UI
+
+* "Učiť sa len zo mňa"
+* žiadne zdieľanie
+* všetko ostáva lokálne
+
+#### Trusted Circle UI
+
+* "Zdieľať len s vybranými ľuďmi"
+* správa okruhu dôvery
+* výber modulov, ktoré sa môžu synchronizovať
+
+#### Community Assist UI
+
+* "Pomáhať komunite anonymne"
+* len obmedzené artefakty
+* nie plné osobné model dáta
+
+Advanced settings môžu existovať, ale nesmú byť defaultnou cestou.
+
+### 16.12 Technologické odporúčania pre implementáciu
+
+* model runtimes držať oddelene podľa modulu,
+* sync protokol mať modulovo agnostický, ale typovo bezpečný,
+* payloady serializovať explicitne s version metadata,
+* peer identity riešiť kryptograficky,
+* platform state abstrahovať cez BatteryNetworkState service,
+* observability logovať po moduloch aj po sessionách.
+
+### 16.13 Implementačné rozhodnutia s vysokým ROI
+
+Najvyšší ROI majú tieto rozhodnutia:
+
+* začať health modulom,
+* zaviesť Solo a Trusted Circle skôr než Community Assist,
+* rotating leader až po basic coordinator flow,
+* validation gate a rollback zaviesť skoro,
+* personal delta nikdy nenechať prepísať bez ochrany,
+* permissions držať v jednoduchých režimoch a nie v stovkách granular settings.
+
+---
+
+## 17. Zhrnutie
 
 Navrhovaný systém stojí na týchto pilieroch:
 
