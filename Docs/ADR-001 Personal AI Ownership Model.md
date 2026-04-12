@@ -112,6 +112,27 @@ Personal AI:
 * nie je jeho definitívna identita
 * je dynamická a meniteľná
 
+## 3.8 Distribuovaná architektúra (P2P kontext)
+
+Systém je navrhnutý ako:
+
+👉 peer-to-peer sieť Personal AI modelov
+
+To znamená:
+
+* modely komunikujú priamo medzi sebou
+* neexistuje centrálna inteligencia ani centrálne riadenie
+* komunikácia prebieha len za podmienok:
+* relevancie
+* povolenia používateľa
+* lokálneho rozhodnutia modelu
+
+### detailná špecifikácia je definovaná v:
+
+* ADR-014 (Network Communication Model)
+* ADR-015 (Participation Filter)
+* ADR-016 (Collective Query System)
+
 ---
 
 ## 4. 🧠 Dôsledky rozhodnutia
