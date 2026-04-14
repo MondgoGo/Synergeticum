@@ -117,6 +117,12 @@ Používateľ vníma Synergetikum ako:
 - Kvalita emerguje z participácie, nie z dekrétu
 - Systém je organický, nie mechanický
 
+**Doplnenie k emergencii:**
+> Emergencia je definovaná ako nárast signálov (participácia, alignment, commitment). Automaticky vedie k vzniku Topic a následne projektu.
+
+**A zároveň:**
+> Témy a projekty majú prirodzený útlm (decay). Neaktívne entity strácajú váhu a postupne miznú.
+
 ---
 
 ### 4.5 Collaboration without Submission
@@ -149,6 +155,66 @@ Používateľ vníma Synergetikum ako:
 - Citlivé dáta nikdy neopúšťajú zariadenie
 - Zdieľajú sa len agregované alebo anonymizované informácie
 - Používateľ má plnú kontrolu nad tým, čo sa zdieľa
+
+**Doplnenie k de-identifikácii:**
+> Zdieľané dáta sú vždy minimalizované a podľa potreby de-identifikované (napr. agregáty, diferenciálne súkromie).
+
+---
+
+### 4.8 Low-Friction Participation (Core Principle)
+
+> Synergetikum je navrhnuté s predpokladom, že používateľ je často unavený, rozptýlený, nemá čas alebo chuť.
+
+**Z toho vyplýva princíp:**
+
+> **Participácia musí byť čo najlacnejšia na kognitívnu aj časovú energiu.**
+
+Systém preto:
+
+- minimalizuje počet krokov potrebných na odpoveď,
+- umožňuje odpovedať približne alebo neúplne,
+- umožňuje preskočiť otázku bez penalizácie,
+- umožňuje postupnú participáciu (od minimálnej po hlbokú),
+- poskytuje hodnotu aj pri nízkej participácii.
+
+Systém zároveň:
+
+> **nevyžaduje kvalitu vstupu ako podmienku pre poskytnutie hodnoty.**
+
+Namiesto toho:
+
+- pracuje aj s neúplnými a nekvalitnými dátami,
+- postupne zlepšuje presnosť na základe opakovaných interakcií,
+- toleruje nekonzistentnosť a šum.
+
+**Tolerancia chaosu (Graceful Degradation):**
+> Systém zostáva použiteľný aj pri nízkej kvalite vstupov, hluku alebo pasivite. Degradácia je plynulá, nie prudká.
+
+---
+
+### 4.9 Reciprocity as Mechanism (not Ethics)
+
+> Systém prirodzene odmeňuje participáciu vyššou kvalitou výstupov.
+
+**Dôležité:**
+
+- Nízka participácia **nevedie k penalizácii**, ale k **absencii benefitov**.
+- Reciprocita ovplyvňuje **kvalitu vstupov a personalizáciu**.
+- Reciprocita **NIE JE** priamy vplyv na hlas v systéme ani váhu rozhodovania.
+
+**Cost asymmetry:**
+> Systém je navrhnutý tak, že kvalita výstupov priamo koreluje s mierou participácie.
+
+---
+
+### 4.10 Identity Continuity (Psychological Continuity of Self)
+
+> Používateľ musí veriť, že jeho digitálna identita je obnoviteľná.
+
+**Dôsledky:**
+- Strata zariadenia ≠ strata seba
+- Obnova identity nie je technický detail, ale existenčná vlastnosť systému
+- Každý používateľ má mechanizmus na obnovu svojho Personal AI modelu
 
 ---
 
@@ -199,6 +265,7 @@ Používateľ vníma Synergetikum ako:
 | **Cold start** | Nový používateľ nemá vybudovaný model | Shared foundation modely, onboarding otázky, voliteľný community assist |
 | **Globálna uniformita** | Neexistuje jeden "pravdivý" model | To je vlastnosť, nie chyba – personalizácia je cieľ |
 | **Komplexita UX** | Používateľ musí rozumieť režimom (Solo, Trusted Circle, Community Assist) | Jednoduché prednastavené režimy, advanced len pre pokročilých |
+| **Strata zariadenia** | Riziko straty digitálnej identity | Encrypted distributed backup (parent node + trusted circle), split secrets |
 
 ---
 
@@ -283,11 +350,16 @@ Tento ADR je zakladajúci. Definuje "prečo" a "čo" – všetky ostatné ADR de
 | ADR | Vzťah |
 |-----|-------|
 | ADR-001 (Vlastníctvo osobného modelu) | Implementuje princíp "Personal Ownership First" |
+| ADR-002 (Human-in-the-loop) | Implementuje princíp "Human-in-the-loop" |
+| ADR-003 (Non-Manipulation) | Implementuje princíp "Non-Manipulation" |
+| ADR-004 (Privacy-first) | Implementuje princíp "Privacy as Core Feature" |
 | ADR-034 (Personal AI Internal Model) | Definuje, čo Personal AI obsahuje |
 | ADR-014 (Network Communication) | Implementuje decentralizáciu a P2P |
 | ADR-015 (Participation Filter) | Implementuje Human-in-the-loop a selekciu |
 | ADR-007 (Validation Gate) | Implementuje konzervatívny merge a dôveru |
 | ADR-009 (Heterogénne uzly) | Implementuje mobil + desktop architektúru |
+| ADR-036 (Reciprocity Engine) | Implementuje princíp reciprocity |
+| ADR-037 (Identity Recovery) | Implementuje princíp identity continuity |
 
 ---
 
@@ -303,6 +375,7 @@ Toto je rovnako dôležité ako to, čo systém JE.
 | **Hlasovací systém** | Rozhodnutia sú lokálne, nie centrálne agregované |
 | **Nástroj na manipuláciu** | Systém nemôže byť použitý na ovplyvňovanie používateľov bez ich vedomia |
 | **Big Data projekt** | Dáta zostávajú lokálne, nie sú centrálne zbierané |
+| **Systém trestania** | Nízka participácia nevedie k penalizácii, len k absencii benefitov |
 
 ---
 
@@ -317,6 +390,7 @@ Ako vieme, že systém funguje?
 | **Používateľ dôveruje systému** | Nízka miera opt-outu zo synchronizácie, vysoká miera zapnutých trusted circles |
 | **Kvalita rozhodnutí** | Používateľ subjektívne vníma, že sa rozhoduje lepšie |
 | **Decentralizácia funguje** | Systém beží bez centrálneho uzla, žiadny single point of failure |
+| **Nízka bariéra participácie** | Používatelia participujú bez pocitu záťaže |
 
 ---
 
