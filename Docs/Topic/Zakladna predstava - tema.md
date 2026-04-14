@@ -1,9 +1,3 @@
-Jasné. Toto si treba ujasniť, lebo inak celý „distribuovaný projekt“ ostáva len magická veta.
-
-Poviem ti to **hrubo, architektonicky, bez implementačných detailov**, ale tak, aby si si to vedel predstaviť fyzicky.
-
----
-
 # 1. Základná predstava
 
 Projekt v Synergetiku **nie je jeden súbor na jednom mieste**.

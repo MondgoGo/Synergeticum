@@ -8,29 +8,28 @@
 
 Tento dokument definuje:
 
-👉 **aká je vnútorná štruktúra projektu v systéme Synergetikum**
+👉 **aká je vnútorná štruktúra 'Témy' v systéme Synergetikum**
 
 Cieľom je:
 
-* odstrániť „black box“ v chápaní projektu
-* definovať základné komponenty projektu
+* definovať základné komponenty 'Témy'
 * vytvoriť spoločný mentálny model pre architektov, developerov a analytikov
 
 ---
 
 # 2. Core Definition
 
-Projekt je:
+'Téma' je:
 
 > **distribuovaný, evolučný objekt, ktorý reprezentuje kolektívne myslenie, rozhodovanie a potenciálnu realizáciu okolo jednej témy alebo zámeru.**
 
-Projekt NIE JE:
+'Téma' NIE JE:
 
 * dokument
 * chat
 * súbor
 
-Projekt JE:
+'Téma' JE:
 
 * strom variantov
 * tok udalostí
@@ -42,7 +41,7 @@ Projekt JE:
 
 # 3. High-Level Structure
 
-Projekt sa skladá z 5 hlavných častí:
+'Téma' sa skladá z 5 hlavných častí:
 
 1. Project Identity
 2. Branch Structure
@@ -61,8 +60,8 @@ Obsahuje:
 * project_id
 * názov
 * krátky popis
-* iniciátor
-* typ projektu (execution / consensus / conceptual)
+* iniciátora
+* typ 'Témy' (execution / consensus / conceptual)
 * governance mode
 * timestamp vzniku
 
@@ -75,7 +74,7 @@ Obsahuje:
 
 # 5. Branch Structure (Core of the Project)
 
-Projekt je:
+'Téma' je:
 
 👉 **strom vetiev (branches)**
 
@@ -101,7 +100,7 @@ Projekt je:
 
 ---
 
-## Úloha:
+## Úloha 'Témy':
 
 * reprezentovať rôzne riešenia
 * eliminovať konflikty cez paralelný vývoj
@@ -110,7 +109,7 @@ Projekt je:
 
 # 6. Event Stream (Evolution Engine)
 
-Projekt sa neukladá ako statický stav, ale ako:
+'Téma' sa neukladá ako statický stav, ale ako:
 
 👉 **tok udalostí (event stream)**
 
@@ -149,7 +148,7 @@ Projekt sa neukladá ako statický stav, ale ako:
 
 Z eventov sa odvádza:
 
-👉 **aktuálny stav projektu**
+👉 **aktuálny stav 'Témy'**
 
 ---
 
@@ -235,7 +234,7 @@ Používa sa hlavne pri:
 
 # 10. Participation Mapping
 
-Projekt obsahuje mapu zapojenia:
+'Téma' obsahuje mapu zapojenia:
 
 ---
 
@@ -280,7 +279,7 @@ Vetvy aj projekt reagujú na:
 
 # 12. Distribution Model
 
-Projekt:
+'Téma':
 
 * existuje na viacerých uzloch
 * je replikovaný
@@ -319,7 +318,7 @@ Obsahuje:
 
 # 14. Minimal Concept Model (Summary)
 
-Projekt =
+'Téma' =
 
 * Identity
 * Branch Tree
@@ -332,7 +331,7 @@ Projekt =
 
 # 15. Design Constraints
 
-Projekt musí:
+'Téma' musí:
 
 * byť distribuovaný
 * byť rekonštruovateľný z eventov
@@ -355,7 +354,7 @@ Tento model umožňuje:
 
 # 17. Final Statement
 
-> Projekt v Synergetiku nie je dokument ani verzia pravdy.
+> 'Téma' v Synergetiku nie je dokument ani verzia pravdy.
 > Je to živý distribuovaný systém možností, ktorý sa vyvíja v čase a odráža kolektívne myslenie ľudí.
 
 ---
