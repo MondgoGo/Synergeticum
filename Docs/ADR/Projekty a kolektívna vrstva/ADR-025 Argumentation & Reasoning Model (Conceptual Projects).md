@@ -1,10 +1,10 @@
-# 🧾 ADR-025: Argumentation & Reasoning Model (Conceptual Projects)
+# 🧾 ADR-025: Argumentation & Reasoning Model (Hardened v2)
 
 ---
 
 ## 1. 📌 Status
 
-**Proposed**
+**Accepted (v2 – Hardened)**
 
 ---
 
@@ -17,13 +17,9 @@ Systém Personal AI Network:
 * používa support model (ADR-028)
 * filtruje participáciu (ADR-015)
 
----
-
 Tieto mechanizmy dobre fungujú pre:
 
 * realizačné projekty (napr. pizzéria)
-
----
 
 ### Problém
 
@@ -38,53 +34,39 @@ Pre **konceptuálne projekty** (napr. ústava, pravidlá, hodnoty):
   * emócie
   * rétorika
 
----
+👉 systém potrebuje inú vrstvu:
 
-👉 systém potrebuje inú vrstvu
-
----
+> **Argumentačnú vrstvu, ktorá nielen štrukturuje diskusiu, ale umožňuje, aby argumenty mali reálny dopad na vývoj projektu bez vzniku mocenských hierarchií.**
 
 ### Kľúčová otázka
 
-👉
-**Ako umožniť kvalitnú kolektívnu diskusiu a rozhodovanie bez dominancie ega, manipulácie a chaosu?**
+👉 **Ako umožniť kvalitnú kolektívnu diskusiu a rozhodovanie bez dominancie ega, manipulácie a chaosu?**
 
 ---
 
 ## 3. ⚖️ Rozhodnutie
 
----
-
-## 🧠 3.1 Zavedenie „Argumentation Layer“
-
----
+### 🧠 3.1 Zavedenie „Argumentation Layer“
 
 Systém zavádza:
 
 👉 **Argumentation & Reasoning Layer**
-
----
 
 Táto vrstva:
 
 * štrukturuje diskusiu
 * oddeľuje argument od osoby
 * umožňuje porovnanie návrhov
+* prepojuje argumenty na vetvy projektu
 
 ---
 
----
-
-## 🧩 3.2 Argument ako základná jednotka
-
----
+### 🧩 3.2 Argument ako základná jednotka
 
 Základná entita nie je:
 
 ❌ komentár
 ❌ názor
-
----
 
 👉 ale:
 
@@ -92,101 +74,54 @@ Základná entita nie je:
 
 ---
 
----
-
-## 🧾 3.3 Štruktúra argumentu
+### 🧾 3.3 Štruktúra argumentu
 
 Každý argument obsahuje:
 
----
+| Komponent | Popis |
+|-----------|-------|
+| **Claim (tvrdenie)** | čo tvrdím |
+| **Reasoning (odôvodnenie)** | prečo to tvrdím |
+| **Assumptions (predpoklady)** | na čom to stojí |
+| **Implications (dôsledky)** | čo to spôsobí |
 
-### 📌 Claim (tvrdenie)
-
-čo tvrdím
-
----
-
-### 📌 Reasoning (odôvodnenie)
-
-prečo to tvrdím
+👉 bez tejto štruktúry argument nemá plnú váhu.
 
 ---
 
-### 📌 Assumptions (predpoklady)
-
-na čom to stojí
-
----
-
-### 📌 Implications (dôsledky)
-
-čo to spôsobí
-
----
-
----
-
-👉 bez tejto štruktúry:
-
-* argument nemá plnú váhu
-
----
-
----
-
-## ⚔️ 3.4 Povinná existencia protiargumentu
-
----
+### ⚔️ 3.4 Povinná existencia protiargumentu
 
 Každý významný návrh musí mať:
 
 👉 **counter-argument**
-
----
 
 To znamená:
 
 * systém aktívne generuje opozíciu
 * alebo ju vyžaduje
 
----
-
-👉 cieľ:
-
-👉 vyvážiť bias
+👉 cieľ: vyvážiť bias
 
 ---
 
----
-
-## 🧠 3.5 Oddelenie osoby od argumentu
-
----
+### 🧠 3.5 Oddelenie osoby od argumentu
 
 Systém NESMIE:
 
 * zvýhodňovať autora argumentu
 * zvýhodňovať popularitu
 
----
+👉 hodnotí sa **argument, nie človek**
 
-👉 hodnotí sa:
-
-👉 **argument, nie človek**
+> Hodnotenie argumentu je úplne oddelené od identity autora. Tento princíp je základom pre elimináciu mocenského biasu (ADR-038).
 
 ---
 
----
-
-## 🧠 3.6 Argument graph
-
----
+### 🧠 3.6 Argument graph
 
 Argumenty tvoria:
 
 👉 **graph (sieť vzťahov)**
-
----
 
 Obsahuje:
 
@@ -194,62 +129,30 @@ Obsahuje:
 * protiargumenty
 * alternatívne pohľady
 
----
+👉 projekt nie je lineárna diskusia, ale **mapa argumentov**
+
+> Argument graph nie je len vizualizácia diskusie, ale primárna štruktúra, z ktorej sa odvodzuje vývoj projektu.
 
 ---
 
-👉 projekt nie je lineárna diskusia
-👉 ale **mapa argumentov**
-
----
-
----
-
-## ⚖️ 3.7 Hodnotenie argumentov
-
----
+### ⚖️ 3.7 Hodnotenie argumentov
 
 Argument sa hodnotí podľa:
 
----
+| Kritérium | Popis |
+|-----------|-------|
+| **Koherencia** | je logicky konzistentný |
+| **Pokrytie** | zohľadňuje viac aspektov |
+| **Robustnosť** | odoláva protiargumentom |
+| **Praktické dôsledky** | je aplikovateľný |
 
-### 🔹 Koherencia
+👉 NIE podľa počtu hlasov.
 
-je logicky konzistentný
-
----
-
-### 🔹 Pokrytie
-
-zohľadňuje viac aspektov
-
----
-
-### 🔹 Robustnosť
-
-odoláva protiargumentom
+> Hodnotenie slúži na orientáciu v kvalite argumentov, nie na vytváranie hierarchie medzi používateľmi.
 
 ---
 
-### 🔹 Praktické dôsledky
-
-je aplikovateľný
-
----
-
----
-
-👉 NIE:
-
-* podľa počtu hlasov
-
----
-
----
-
-## 🧠 3.8 Úloha AI
-
----
+### 🧠 3.8 Úloha AI
 
 AI:
 
@@ -259,10 +162,6 @@ AI:
 * generuje protiargumenty
 * sumarizuje diskusiu
 
----
-
----
-
 AI NESMIE:
 
 * rozhodovať
@@ -270,38 +169,97 @@ AI NESMIE:
 
 ---
 
+### 🔥 3.9 Argument → Impact Model (NOVÁ KRITICKÁ VRSTVA)
+
+Argumenty nemajú len existovať.
+
+👉 musia mať **dopad na realitu projektu**
+
+**Princíp:**
+
+> **Argument ovplyvňuje vývoj projektu iba nepriamo – cez štruktúru, nie cez autoritu.**
+
+**To znamená:**
+
+Argument môže:
+
+* posilniť vetvu (branch)
+* oslabiť vetvu
+* vytvoriť novú vetvu
+* zmeniť smer diskusie
+
+❌ **nikdy:**
+
+* nepridáva „váhu hlasu“
+* nepridáva autoritu používateľovi
+* neovplyvňuje systém cez identitu autora
+
 ---
 
-## 🔄 3.9 Výstup projektu
+### 🧠 3.10 Vzťah k vetvám (Branching)
+
+Každá vetva projektu:
+
+* je podložená konkrétnymi argumentmi
+* obsahuje vlastný argument graph
+
+👉 vetva prežíva, ak:
+
+* má robustné argumenty
+* prechádza protiargumentmi
+
+👉 vetva zaniká (ADR-029), ak:
+
+* nemá podporu
+* alebo jej argumenty neobstoja
 
 ---
 
-Výsledok nie je:
+### 🧠 3.11 Argument ≠ rozhodnutie
 
-❌ jeden víťaz
+Systém:
+
+❌ nikdy nevyberá „víťazný argument“
+
+👉 poskytuje:
+
+* mapu možností
+* dôsledky
+* konflikty
+
+👉 rozhoduje **človek** (ADR-002)
 
 ---
 
-👉 ale:
+### 🧠 3.12 Ochrana pred mocou (prepojenie na ADR-038)
 
-👉 **structured reasoning output**
+Argumentation Layer je navrhnutá tak, aby:
+
+* minimalizovala vplyv silných osobností
+* zabránila dominancii hlasných používateľov
+* oddelila kvalitu argumentu od jeho prezentácie
+
+> Argument môže získať vplyv len tým, že obstojí v konfrontácii s inými argumentmi – nie tým, kto ho vyslovil.
 
 ---
+
+### 🔄 3.13 Výstup projektu
+
+Výsledok je:
+
+👉 **structured reasoning output + branch landscape**
 
 Obsahuje:
 
-* hlavné varianty
-* argumenty pre každý
+* hlavné vetvy
+* argumenty pre každú vetvu
 * protiargumenty
 * dôsledky
+* konflikty medzi vetvami
 
 ---
 
----
-
-## 🧠 3.10 Prepojenie na View Layer
-
----
+### 🧠 3.14 Prepojenie na View Layer
 
 Používateľ vidí:
 
@@ -309,124 +267,73 @@ Používateľ vidí:
 * hlavné konflikty
 * kľúčové rozhodovacie body
 
----
-
-👉 nie celý graph
+👉 nie celý graph.
 
 ---
 
----
-
-## 🧠 3.11 Governance napojenie
-
----
+### 🧠 3.15 Governance napojenie
 
 Argumentation Layer:
 
 * dopĺňa Support Model (ADR-028)
 * dopĺňa Branching (ADR-024)
+* je základom pre Power balancing (ADR-038)
 
----
-
-👉 používa sa hlavne pre:
-
-* conceptual / normative projekty
-
----
+> Používa sa hlavne pre conceptual / normative projekty.
 
 ---
 
 ## 4. 🧠 Dôsledky rozhodnutia
 
----
+### ✅ Pozitívne
 
-## ✅ Pozitíva
+| Oblasť | Dôsledok |
+|--------|----------|
+| **Kvalitnejšie myslenie** | menej emócií, viac logiky |
+| **Ochrana pred manipuláciou** | argument > ego |
+| **Škálovateľnosť diskusie** | veľké témy zvládnuteľné |
+| **Vyváženie moci** | argument > autor, vplyv nevzniká z aktivity, ale z kvality reasoning |
 
----
+### ❗ Negatívne / Trade-offs
 
-### 🧠 Kvalitnejšie myslenie
-
-* menej emócií
-* viac logiky
-
----
-
-### ⚖️ Ochrana pred manipuláciou
-
-* argument > ego
-
----
-
-### 🌐 Škálovateľnosť diskusie
-
-* veľké témy zvládnuteľné
-
----
-
----
-
-## ❗ Negatíva / Trade-offs
-
----
-
-### ⚙️ Komplexita
-
-* vyšší vstupný náklad
-
----
-
-### 🧠 Náročnosť pre usera
-
-* treba UX podporu
-
----
+| Oblasť | Dôsledok |
+|--------|----------|
+| **Komplexita** | vyšší vstupný náklad |
+| **Kognitívna náročnosť** | vyžaduje dobrý UX (ADR-027) |
+| **Výpočtová komplexita** | argument graph môže rásť exponenciálne |
 
 ---
 
 ## 5. 🚫 Alternatívy (zamietnuté)
 
----
-
 ### ❌ Voľná diskusia (komentáre)
 
 * jednoduchá
-* ale:
-
-  * chaotická
-  * manipulovateľná
-
----
-
----
+* ale: chaotická, manipulovateľná
 
 ### ❌ Hlasovanie
 
 * intuitívne
-* ale:
-
-  * skreslené
-  * náchylné na dav
-
----
+* ale: skreslené, náchylné na dav
 
 ---
 
 ## 6. 🔗 Väzby na ďalšie ADR
 
----
-
-* ADR-024 (Branching)
-* ADR-027 (View Layer)
-* ADR-028 (Support Model)
-* ADR-015 (Participation Filter)
-
----
+| ADR | Vzťah |
+|-----|-------|
+| ADR-002 | Human-in-the-loop – rozhoduje človek, nie systém |
+| ADR-015 | Participation Filter – filtruje relevantných účastníkov |
+| ADR-024 | Branching – vetvy projektu sú podložené argumentmi |
+| ADR-027 | View Layer – zjednodušený pohľad pre používateľa |
+| ADR-028 | Support Model – doplnený o argumentačnú vrstvu |
+| ADR-029 | Branch Lifecycle – vetvy zanikajú na základe argumentov |
+| ADR-030 | Sync & Persistence – argument graph musí byť perzistentný |
+| ADR-038 | Power & Influence Balancing – argumentation layer je nástrojom na elimináciu moci |
 
 ---
 
 ## 7. 📏 Pravidlá implementácie (high-level)
-
----
 
 Systém musí:
 
@@ -434,52 +341,30 @@ Systém musí:
 * podporovať protiargumenty
 * vytvárať argument graph
 * oddeliť autora od obsahu
+* prepojiť argumenty na vetvy projektu
+* zabezpečiť, že argument neovplyvňuje systém cez identitu autora
 * prepojiť s AI summarization
 
 ---
 
----
+## 8. 🔥 Zhrnutie
 
-# 🔥 8. Zhrnutie
+> **Argumenty nie sú len diskusia – sú mechanizmus, ktorým sa mení štruktúra projektu bez toho, aby vznikala mocenská hierarchia.**
 
----
+Konceptuálne projekty sú riadené kvalitou argumentov, nie hlasovaním ani silou osobností.
 
-👉
-**Konceptuálne projekty sú riadené kvalitou argumentov, nie hlasovaním ani silou osobností.**
-
----
+Argument môže posilniť, oslabiť alebo vytvoriť vetvu – ale nikdy nepridáva váhu hlasu svojmu autorovi.
 
 ---
 
-# 🧭 Finálna veta
+## 9. 🧭 Finálna veta
+
+> **V Synergetiku nemá vplyv ten, kto hovorí – ale to, čo prežije konfrontáciu s inými myšlienkami.**
+
+V komplexných problémoch nevyhráva ten, kto kričí najhlasnejšie – ale ten, koho argument prežije najviac otázok.
 
 ---
 
-👉
-**V komplexných problémoch nevyhráva ten, kto kričí najhlasnejšie – ale ten, koho argument prežije najviac otázok.**
-
----
-
----
-
-# 🧠 FINÁLNY STAV SYSTÉMU
-
----
-
-Teraz máš komplet:
-
-* P2P sieť
-* Personal AI
-* projekty
-* vetvy
-* lifecycle
-* support
-* view
-* participation
-* 👉 argumentačný model
-
----
-
-👉 toto je už reálne nový typ systému
-
----
+**Dátum:** 2026-04-14  
+**Stav:** Accepted  
+**Typ:** Core Mechanism ADR (Conceptual Projects)
