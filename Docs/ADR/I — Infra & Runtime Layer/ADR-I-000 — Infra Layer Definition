@@ -1,0 +1,303 @@
+# ADR-I-000 — Infra Layer Definition
+
+## 1. 📌 Status  
+Proposed
+
+---
+
+## 2. 🎯 Kontext
+
+Systém Synergetikum pozostáva z viacerých vrstiev:
+
+- A — Filozofia a princípy  
+- B — Personal AI a používateľský model  
+- C — Otázky, interakcia a personalizácia  
+- D — Sieť a participácia  
+- E–H — Projekty a kolektívna vrstva  
+
+Doteraz však chýbala explicitná definícia vrstvy, ktorá:
+
+> zabezpečuje, že systém **technicky funguje v reálnom svete**
+
+---
+
+## ❗ Problém
+
+Bez oddelenej infra vrstvy dochádza k:
+
+- miešaniu:
+  - UX
+  - AI logiky
+  - storage
+  - networking
+
+- nejasnostiam:
+  - čo je implementačný detail
+  - čo je architektonický princíp
+
+- riziku:
+  - neudržateľnej architektúry
+  - ťažkej implementácie
+  - nekonzistentných ADR
+
+---
+
+## 3. ⚖️ Rozhodnutie
+
+---
+
+## 🧠 3.1 Definícia Infra Layer
+
+---
+
+> **Infra Layer (I) je vrstva systému, ktorá zabezpečuje jeho beh, dostupnosť, ukladanie a obnovu dát — bez toho, aby obsahovala produktovú alebo rozhodovaciu logiku.**
+
+---
+
+## 🧩 3.2 Čo patrí do Infra Layer
+
+---
+
+Infra vrstva zahŕňa:
+
+### ⚙️ Runtime & Compute
+- execution prostredie (napr. parent node)
+- scheduling
+- background processing
+
+---
+
+### 💾 Persistence & Storage
+- lokálne uloženie dát
+- snapshoty
+- event log
+- verzovanie
+
+---
+
+### 🔄 Synchronizácia
+- prenos zmien medzi uzlami
+- conflict handling (mechanika, nie rozhodovanie)
+- consistency model
+
+---
+
+### 🔐 Security & Cryptography
+- šifrovanie
+- key management
+- identity recovery mechanizmy
+
+---
+
+### 🌐 Network substrate (čiastočne)
+- transport vrstvy
+- konektivita (nie participation logika)
+
+---
+
+---
+
+## 🚫 3.3 Čo NEPATRÍ do Infra Layer
+
+---
+
+Infra vrstva nikdy neobsahuje:
+
+### ❌ AI logiku
+- learning model
+- inference
+- personalization
+
+---
+
+### ❌ UX / produktové správanie
+- čo používateľ vidí
+- ako sa rozhoduje flow
+
+---
+
+### ❌ Social / network behavior
+- participation filter
+- trust model
+- collaboration
+
+---
+
+### ❌ Project logiku
+- argumenty
+- rozhodovanie
+- governance
+
+---
+
+---
+
+## 🧠 3.4 Vzťah k ostatným vrstvám
+
+---
+
+| Vrstva | Zodpovednosť |
+|--------|--------------|
+| A | prečo systém existuje |
+| B | kto je používateľ |
+| C | ako používateľ interaguje |
+| D | kto sa zapája |
+| E–H | čo vzniká |
+| **I** | ako systém beží |
+
+---
+
+👉 Infra Layer:
+
+> **nič nerozhoduje — iba umožňuje, aby sa rozhodovanie mohlo diať**
+
+---
+
+---
+
+## 🧠 3.5 Princípy Infra Layer
+
+---
+
+### 1. Separation of Concerns
+
+> Infra nikdy neobsahuje doménovú logiku.
+
+---
+
+### 2. Deterministic Behavior
+
+> Infra musí byť predvídateľná a testovateľná.
+
+---
+
+### 3. Replaceability
+
+> Každý infra komponent musí byť nahraditeľný bez zmeny vyšších vrstiev.
+
+---
+
+### 4. Minimal Intelligence
+
+> Infra nesmie „premýšľať“ — iba vykonáva.
+
+---
+
+### 5. Failure Transparency
+
+> Zlyhania infra vrstvy musia byť detegovateľné, nie skryté.
+
+---
+
+---
+
+## 🧠 3.6 Príklady zaradenia ADR
+
+---
+
+### ✅ Patrí do Infra Layer
+
+- ADR-021 — Parent Node Architecture  
+- ADR-030 — Sync & Persistence Strategy  
+- ADR-041 — Recovery Storage & Snapshot Strategy  
+
+---
+
+### ❌ Nepatrí do Infra Layer
+
+- ADR-006 — Learning Model  
+- ADR-011 — Personalization Strategy  
+- ADR-015 — Participation Filter  
+- ADR-025 — Argumentation Model  
+
+---
+
+---
+
+## 🧠 3.7 Anti-patterns
+
+---
+
+### ❌ Mixing infra with logic
+
+Príklad:
+- „parent node rozhoduje, čo je relevantné“
+
+👉 porušenie vrstiev
+
+---
+
+### ❌ Smart infra
+
+Príklad:
+- infra robí optimalizáciu rozhodnutí
+
+👉 porušenie Human-in-the-loop
+
+---
+
+### ❌ Hidden coupling
+
+Príklad:
+- storage formát ovplyvňuje UX
+
+👉 zlá architektúra
+
+---
+
+---
+
+## 4. 🧠 Dôsledky rozhodnutia
+
+---
+
+## ✅ Pozitíva
+
+- jasné oddelenie vrstiev  
+- jednoduchšia implementácia  
+- lepšia testovateľnosť  
+- nižší coupling  
+
+---
+
+## ❗ Negatíva / Trade-offs
+
+- viac ADR dokumentov  
+- potreba discipliny pri návrhu  
+- pomalší začiatok  
+
+---
+
+---
+
+## 5. 🔗 Väzby na ďalšie ADR
+
+---
+
+- ADR-001 — Ownership (infra ho musí podporovať, nie definovať)  
+- ADR-030 — Sync & Persistence  
+- ADR-037 — Identity Recovery  
+- ADR-041 — Recovery Strategy  
+
+---
+
+---
+
+# 🔥 6. Zhrnutie
+
+---
+
+👉  
+**Infra Layer je neviditeľná vrstva systému, ktorá nič nerozhoduje, ale bez nej neexistuje žiadne rozhodovanie.**
+
+---
+
+---
+
+# 🧭 Finálna veta
+
+---
+
+👉  
+**Ak infra začne „premýšľať“, systém sa rozpadne.  
+Ak infra neexistuje, systém nevznikne.**

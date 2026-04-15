@@ -186,6 +186,40 @@ Definícia `Event` ako špecifický typ Node – s atribútmi `start_time`, `end
 Eventy môžu byť spojené s projektom, vetvou, argumentom alebo témou.
 Notifikačný mechanizmus (opt-in, lokálne rozhodnutie, nie centrálny server).
 
+* ADR-043 — Participation Reality Model**
+* ADR-046 — Auditability
+* ADR-047 — Open Source Governance
+* ADR-048 — Parent Node Certification
+* ADR-049 — Minimal Service Level Guarantee**
+
+- ADR-050 — Identity Noise
+- ADR-051 — Cold Start
+- ADR-052 — Anti-Gaming
+- ADR-053 — Context Model
+- ADR-054 — UX Contract
+- ADR-055 — Simplicity Constraints
+- ADR-056 — Failure & Recovery
+
+- 057 — Friction
+- 058 — Behavior vs Answer
+- 059 — Question Quality
+- 060 — Reality Exposure
+- 061 — Immediate Value
+- 062 — Commitment UX
+- 063 — Attention
+- 064 — Failure
+
+- 065 — Network reality
+- 066 — Filter failure
+- 067 — Sybil
+- 068 — Rate limiting
+- 069 — Collaboration reality
+- 070 — Influence signals
+- 071 — Network health
+
+- 072 — Bootstrap
+- 073 — Trust
+- 074 — Latency
 ---
 
 # Poznámka k poradiu a prekryvom
@@ -240,33 +274,42 @@ Ak si to chceš usporiadať do logických balíkov:
 * ADR-017
 * ADR-033
 
-## E. Projekty a kolektívna vrstva
+# 📘 **KAPITOLA E — Domain Model (Projects & Entities)**
+👉 „čo projekt JE“
+* ADR-022 — Collective Project Formation
+* ADR-023 — Distributed Project Object Model
+* ADR-024 — Multi-Variant Project Governance
+* ADR-026 — Project Roles & Permission Model
+* ADR-042 — Unified Entity Model (Node)
 
-* ADR-018
-* ADR-019
-* ADR-020
-* ADR-021
-* ADR-022
-* ADR-023
-* ADR-024
-* ADR-025
-* ADR-026
-* ADR-027
-* ADR-028
-* ADR-029
-* ADR-030
-* ADR-031
-* ADR-045
+# 📗 **KAPITOLA F — Kolektívna inteligencia (Reasoning & Truth)**
+👉 „ako projekt myslí“
+* ADR-025 — Argumentation & Reasoning Model
+* ADR-028 — Support & Alignment Model
+* ADR-038 — Power & Influence Balancing
+* ADR-039 — Truth & Epistemic Model
 
+# 📙 **KAPITOLA G — Vznik a príležitosti (Formation Layer)**
+👉 „prečo niečo vznikne“
+* ADR-018 — Simulation Engine
+* ADR-019 — Opportunity Engine
+* ADR-031 — Topic Layer & Project Formation
+
+# 📕 **KAPITOLA H — Život projektu (Lifecycle & Operations)**
+👉 „ako projekt žije alebo zomiera“
+* ADR-029 — Branch Lifecycle Model
+* ADR-030 — Sync & Persistence Strategy
+* ADR-027 — Project View & Simplification Model
+* ADR-020 — Growth Model
+* ADR-045 — Calendar & Event Coordination
+
+# 📕 **Kapitola I — Infra & Runtime Layer
+* ADR-I-000 — Infra Layer Definition
+* ADR-I-001 — Runtime Execution Model
+* ADR-I-002 — Compute Budget & Model Constraints
+* ADR-021 Parent Node Architecture
+* ADR-030 Sync & Persistence Strategy
+* ADR-041 (Recovery Storage & Snapshot Strategy)
 ---
 
-Ak chceš, ďalší krok spravím ako **ADR index dokument v markdown štýle**, teda formálny dokument:
 
-* názov ADR
-* status
-* owner
-* priority
-* dependencies
-* short summary
-
-To by už bolo vhodné rovno do vašej projektovej dokumentácie.
