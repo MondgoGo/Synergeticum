@@ -1,19 +1,17 @@
-# 🧾 ADR-025: Argumentation & Reasoning Model (Hardened v4)
+# 🧾 ADR-025: Argumentation & Reasoning Model (Hardened v5)
 
-> **Zmeny oproti Version 3 (Hardened v3):**
-> - **Doplnená časť 3.19:** Impact Metrics – meranie vplyvu argumentov na rozhodnutia
-> - **Doplnená časť 3.20:** Tree Visualization – stromová vizualizácia argumentov
-> - **Doplnená časť 3.21:** Decision Trail – sledovanie rozhodovacej cesty
-> - **Rozšírená časť 3.9:** Impact Model – prepojenie na impact metrics
-> - **Rozšírená časť 3.14:** View Layer – o vizualizáciu stromu a decision trail
-> - **Rozšírená časť 6:** Väzby na ADR-027, ADR-044
-> - **Nová sekcia 8.4 – 8.6:** Príklady pre impact metrics a tree visualization
+> **Zmeny oproti Version 4 (Hardened v4):**
+> - **Doplnená časť 3.22:** Threading a typy diskusných príspevkov (prepojenie na INSPIRATION-07)
+> - **Rozšírená časť 3.6:** Argument graph o diskusné vlákna
+> - **Rozšírená časť 3.14:** View Layer o zobrazenie threadov
+> - **Rozšírená časť 6:** Väzby na ADR-027
+> - **Nová sekcia 8.6:** Príklad pre Threading a diskusné príspevky
 
 ---
 
 ## 1. 📌 Status
 
-**Accepted (v4 – Hardened with Impact Metrics & Tree Visualization)**
+**Accepted (v5 – Hardened with Threading & Discussion Posts)**
 
 ---
 
@@ -71,6 +69,16 @@ Aj pri kvalitných argumentoch vzniká problém:
 
 👉 systém potrebuje **metriky vplyvu** a **vizualizáciu rozhodovacej cesty**.
 
+### Dodatočný problém (v5)
+
+Aj pri všetkých vyššie uvedených vylepšeniach chýba:
+
+* **štruktúrovaná diskusia** – argumenty sú statické, chýba živá interakcia
+* **typy príspevkov** – nevieme rozlíšiť otázku od námietky alebo návrhu
+* **threading** – diskusia je plochá, stráca sa kontext
+
+👉 systém potrebuje **diskusné vlákna (threads)** a **typované príspevky**.
+
 ---
 
 ## 3. ⚖️ Rozhodnutie
@@ -91,6 +99,7 @@ Táto vrstva:
 * **oddeľuje kvalitu od popularity (v3)**
 * **meria vplyv argumentov na rozhodnutia (v4)**
 * **poskytuje stromovú vizualizáciu argumentov (v4)**
+* **poskytuje diskusné vlákna a typované príspevky (v5)**
 
 ---
 
@@ -104,6 +113,8 @@ Základná entita nie je:
 👉 ale:
 
 👉 **argument**
+
+**V5 rozšírenie:** Každý argument má vlastné diskusné vlákno (thread) pre doplňujúce otázky, návrhy a námietky.
 
 ---
 
@@ -120,6 +131,7 @@ Každý argument obsahuje:
 | **Evidence (dôkazy)** | čím to podkladám (nepovinné) |
 | **Influenced Decisions (v4)** | zoznam rozhodnutí, ktoré tento argument ovplyvnil |
 | **Impact Score (v4)** | miera vplyvu na vývoj projektu |
+| **Thread (v5)** | diskusné vlákno s príspevkami |
 
 👉 bez tejto štruktúry argument nemá plnú váhu.
 
@@ -153,7 +165,7 @@ Systém NESMIE:
 
 ---
 
-### 🧠 3.6 Argument graph
+### 🧠 3.6 Argument graph (Rozšírené v v5)
 
 Argumenty tvoria:
 
@@ -164,6 +176,7 @@ Obsahuje:
 * podporujúce argumenty
 * protiargumenty
 * alternatívne pohľady
+* **diskusné vlákna (threads) priradené ku každému argumentu (v5)**
 
 👉 projekt nie je lineárna diskusia, ale **mapa argumentov**
 
@@ -293,7 +306,7 @@ Systém **MÔŽE**:
 
 ---
 
-### 📊 3.19 Impact Metrics – meranie vplyvu argumentov na rozhodnutia (NOVÉ v v4)
+### 📊 3.19 Impact Metrics – meranie vplyvu argumentov na rozhodnutia
 
 **Princíp:**
 
@@ -366,7 +379,7 @@ Používateľ môže k argumentu pridať:
 
 ---
 
-### 🌳 3.20 Tree Visualization – stromová vizualizácia argumentov (NOVÉ v v4)
+### 🌳 3.20 Tree Visualization – stromová vizualizácia argumentov
 
 **Princíp:**
 
@@ -429,7 +442,7 @@ Používateľ môže:
 
 ---
 
-### 🗺️ 3.21 Decision Trail – sledovanie rozhodovacej cesty (NOVÉ v v4)
+### 🗺️ 3.21 Decision Trail – sledovanie rozhodovacej cesty
 
 **Princíp:**
 
@@ -501,7 +514,93 @@ Pre projekt ako celok môže byť zobrazený **kolektívny decision trail**:
 
 ---
 
-### 🧠 3.8 Úloha AI
+### 🧵 3.22 Threading a typy diskusných príspevkov (NOVÉ v v5)
+
+**Princíp:**
+
+> **Argumenty nie sú izolované statické entity. Každý argument má vlastné diskusné vlákno, kde môžu používatelia klásť otázky, navrhovať vylepšenia, pridávať podporu alebo námietky.**
+
+#### A. Diskusné vlákno (Thread)
+
+Každý argument má priradené diskusné vlákno. Vlákno je stromová štruktúra príspevkov.
+
+```json
+{
+  "argument_id": "arg_001",
+  "thread": {
+    "thread_id": "thread_arg_001",
+    "posts": [
+      {
+        "post_id": "post_001",
+        "parent_post_id": null,  // null = koreňový príspevok (samotný argument)
+        "author_id": "user_miro_001",
+        "type": "argument",  // špeciálny typ pre samotný argument
+        "content": "Pizzéria by mala používať lokálne suroviny...",
+        "created_at": "2026-04-15T10:00:00Z"
+      },
+      {
+        "post_id": "post_002",
+        "parent_post_id": "post_001",
+        "author_id": "user_jana_001",
+        "type": "question",
+        "content": "Aké konkrétne lokálne suroviny máš na mysli?",
+        "created_at": "2026-04-15T11:00:00Z"
+      },
+      {
+        "post_id": "post_003",
+        "parent_post_id": "post_002",
+        "author_id": "user_miro_001",
+        "type": "clarification",
+        "content": "Myslím múku od mlyna v Trnave, zeleninu od okolitých farmárov...",
+        "created_at": "2026-04-15T11:30:00Z"
+      }
+    ]
+  }
+}
+```
+
+#### B. Typy príspevkov
+
+| Typ | Význam | Ikona | Vplyv na argument |
+|-----|--------|-------|-------------------|
+| `argument` | Samotný argument (koreň vlákna) | 📋 | Základná entita |
+| `question` | Otázka k argumentu | ❓ | Žiadny priamy vplyv, ale signalizuje nejasnosť |
+| `suggestion` | Návrh na vylepšenie argumentu | 💡 | Môže viesť k aktualizácii argumentu |
+| `support` | Podpora argumentu (dodatočné dôkazy, príklady) | ✅ | Zvyšuje confidence argumentu |
+| `objection` | Námietka (nový protiargument) | ⚠️ | Môže viesť k vytvoreniu nového protiargumentu |
+| `clarification` | Žiadosť o vysvetlenie | 📖 | Signalizuje, že argument nie je dostatočne jasný |
+| `evidence` | Dodatočný dôkaz | 📎 | Zvyšuje factual_basis skóre |
+
+#### C. Threading pravidlá
+
+1. **Stromová štruktúra** – každý príspevok (okrem koreňa) má `parent_post_id`.
+2. **Maximálna hĺbka** – odporúčaná maximálna hĺbka vlákna je 5 úrovní (aby diskusia zostala prehľadná). Pri prekročení systém navrhne vytvorenie nového argumentu.
+3. **Každý príspevok patrí k jednému argumentu** – nemôže byť priradený k viacerým argumentom.
+4. **Príspevky sú synchronizované** medzi participantmi projektu (ADR-030).
+
+#### D. Vplyv príspevkov na kvalitu argumentu
+
+| Typ príspevku | Vplyv na quality_score |
+|---------------|----------------------|
+| `support` s vysokou kvalitou | + (zvyšuje) |
+| `objection` bez protiargumentu | - (znižuje, ak nie je adresovaný) |
+| `clarification` požiadavka | 0, ale znižuje clarity skóre dočasne |
+| `question` bez odpovede | 0, ale signalizuje potrebu vylepšenia |
+| `evidence` s overiteľnými faktami | ++ (výrazne zvyšuje factual_basis) |
+
+#### E. Moderovanie threadov
+
+V rámci Trusted Circle (ADR-004) môžu participanti:
+
+* **Nahlásiť** spam alebo off-topic príspevok
+* **Označiť** príspevok ako `resolved` (napr. otázka bola zodpovedaná)
+* **Zhrnúť** dlhé vlákno (AI asistované)
+
+Systém **NESMIE** automaticky mazať príspevky – každé odstránenie musí byť auditovateľné (ADR-030).
+
+---
+
+### 🧠 3.8 Úloha AI (Rozšírené v v5)
 
 AI:
 
@@ -514,6 +613,9 @@ AI:
 * **hodnotí relevantnosť a faktickú podloženosť**
 * **odhaduje impact score na základe zmien v supporte (v4)**
 * **generuje stromovú vizualizáciu (v4)**
+* **sumarizuje dlhé diskusné vlákna (v5)**
+* **navrhuje odpovede na nezodpovedané otázky (v5)**
+* **deteguje, kedy diskusia presiahla maximálnu hĺbku a navrhuje nový argument (v5)**
 
 AI NESMIE:
 
@@ -521,10 +623,11 @@ AI NESMIE:
 * určovať „pravdu“
 * **skrývať kvalitné argumenty kvôli nízkej popularite**
 * **manipulovať impact score v prospech niektorých argumentov (v4)**
+* **automaticky mazať príspevky v threadoch (v5)**
 
 ---
 
-### 🔥 3.9 Argument → Impact Model (Rozšírené v v4)
+### 🔥 3.9 Argument → Impact Model
 
 Argumenty nemajú len existovať.
 
@@ -597,6 +700,7 @@ Systém:
 * **kvalitu jednotlivých argumentov**
 * **impact metrics (v4)**
 * **decision trail (v4)**
+* **diskusné vlákna (v5)**
 
 👉 rozhoduje **človek** (ADR-002)
 
@@ -611,16 +715,17 @@ Argumentation Layer je navrhnutá tak, aby:
 * oddelila kvalitu argumentu od jeho prezentácie
 * **zabránila dominancii populárnych, ale nekvalitných argumentov**
 * **zabránila manipulácii impact metrics (v4)**
+* **zabránila tomu, aby hlasní používatelia dominovali v diskusných vláknach (v5)**
 
 > Argument môže získať vplyv len tým, že obstojí v konfrontácii s inými argumentmi – nie tým, kto ho vyslovil alebo koľko ľudí s ním súhlasí.
 
 ---
 
-### 🔄 3.13 Výstup projektu
+### 🔄 3.13 Výstup projektu (Rozšírené v v5)
 
 Výsledok je:
 
-👉 **structured reasoning output + branch landscape + quality assessment + impact analysis (v4)**
+👉 **structured reasoning output + branch landscape + quality assessment + impact analysis + discussion threads (v5)**
 
 Obsahuje:
 
@@ -632,10 +737,11 @@ Obsahuje:
 * **argumenty s najvyššou kvalitou (aj keď nepopulárne)**
 * **argumenty s najvyšším impactom (v4)**
 * **decision trail pre každého účastníka (v4)**
+* **diskusné vlákna pre každý argument (v5)**
 
 ---
 
-### 🧠 3.14 Prepojenie na View Layer (Rozšírené v v4)
+### 🧠 3.14 Prepojenie na View Layer (Rozšírené v v5)
 
 Používateľ vidí:
 
@@ -647,6 +753,9 @@ Používateľ vidí:
 * **stromovú vizualizáciu argumentov (v4)**
 * **svoju rozhodovaciu cestu (decision trail) (v4)**
 * **argumenty, ktoré ovplyvnili jeho rozhodnutia (v4)**
+* **diskusné vlákna priradené ku každému argumentu (v5)**
+* **možnosť pridávať otázky, návrhy, podporu a námietky (v5)**
+* **zhrnutie dlhých vlákien (AI generované) (v5)**
 
 👉 nie celý graph (pokiaľ si ho používateľ explicitne nerozbali).
 
@@ -661,6 +770,7 @@ Argumentation Layer:
 * je základom pre Power balancing (ADR-038)
 * **poskytuje vstup pre alignment cez kvalitu argumentov**
 * **poskytuje auditovateľný záznam rozhodnutí (v4)**
+* **poskytuje auditovateľný záznam diskusných príspevkov (v5)**
 
 > Používa sa hlavne pre conceptual / normative projekty.
 
@@ -682,6 +792,9 @@ Argumentation Layer:
 | **Spätná väzba rozhodnutí (v4)** | používateľ vidí, prečo sa rozhodol tak, ako sa rozhodol |
 | **Auditovateľnosť (v4)** | každé rozhodnutie je dohľadateľné k argumentom |
 | **Vzdelávací efekt (v4)** | používateľ sa učí z vlastnej rozhodovacej cesty |
+| **Štruktúrovaná diskusia (v5)** | otázky, návrhy, námietky majú svoje miesto |
+| **Prehľadnosť (v5)** | diskusné vlákna udržiavajú kontext |
+| **Živá argumentácia (v5)** | argumenty nie sú statické, môžu sa vyvíjať |
 
 ### ❗ Negatívne / Trade-offs
 
@@ -689,11 +802,13 @@ Argumentation Layer:
 |--------|----------|
 | **Komplexita** | vyšší vstupný náklad |
 | **Kognitívna náročnosť** | vyžaduje dobrý UX (ADR-027) |
-| **Výpočtová komplexita** | argument graph môže rásť exponenciálne, plus metriky kvality a impactu |
+| **Výpočtová komplexita** | argument graph môže rásť exponenciálne, plus metriky kvality, impactu a threadov |
 | **Riziko „falošnej objektivity“** | AI metriky nie sú dokonalé, môžu byť biasované |
 | **Lokálna výpočtová náročnosť** | hodnotenie kvality a impactu beží na zariadení používateľa |
 | **Kauzalita vs korelácia (v4)** | impact score je odhad, nie absolútna pravda |
 | **Možná manipulácia impactu (v4)** | používateľ môže falošne tvrdiť, že argument ovplyvnil jeho rozhodnutie |
+| **Správa threadov (v5)** | potreba moderovania a sumarizácie |
+| **Úložné nároky (v5)** | diskusné príspevky zväčšujú objem dát |
 
 ---
 
@@ -729,6 +844,11 @@ Argumentation Layer:
 * jednoduchšie
 * ale: stráca sa hierarchia a vzťahy
 
+### ❌ Iba argumenty bez diskusných vlákien (v5)
+
+* jednoduchšie
+* ale: chýba priestor na otázky, návrhy a vysvetlenia
+
 ---
 
 ## 6. 🔗 Väzby na ďalšie ADR
@@ -741,16 +861,15 @@ Argumentation Layer:
 | ADR-011 | Personalization – váhy kvality sú súčasťou Preference Modelu |
 | ADR-015 | Participation Filter – filtruje relevantných účastníkov |
 | ADR-024 | Branching – vetvy projektu sú podložené argumentmi |
-| ADR-027 | View Layer – zjednodušený pohľad pre používateľa, **stromová vizualizácia (v4)** |
-| ADR-028 | Support Model – kvalita argumentov ovplyvňuje alignment, **impact metrics sledujú zmeny supportu (v4)** |
+| **ADR-027** | **View Layer – zjednodušený pohľad pre používateľa, stromová vizualizácia, zobrazenie threadov (v5)** |
+| ADR-028 | Support Model – kvalita argumentov ovplyvňuje alignment, impact metrics sledujú zmeny supportu |
 | ADR-029 | Branch Lifecycle – vetvy zanikajú na základe kvality argumentov |
-| ADR-030 | Sync & Persistence – argument graph a hodnotenia musia byť perzistentné |
+| ADR-030 | Sync & Persistence – argument graph, hodnotenia a **diskusné vlákna** musia byť perzistentné |
 | ADR-034 | Personal AI Internal Model – váhy pre metriky kvality sú v Preference Modeli |
 | ADR-038 | Power & Influence Balancing – argumentation layer je nástrojom na elimináciu moci |
 | ADR-039 | Truth & Epistemic Model – kvalita argumentov je vstupom pre epistemické hodnotenie |
 | ADR-040 | Graceful Degradation – nízka kvalita vstupov vedie k nižšej kvalite hodnotení |
-| **ADR-042** | **Unified Entity Model – Argument je typ Node** |
-| **ADR-044** | **Impact Visualization (ak vznikne ako samostatné ADR)** |
+| **ADR-042** | **Unified Entity Model – Argument je typ Node, Thread môže byť samostatný Node** |
 
 ---
 
@@ -776,6 +895,11 @@ Systém musí:
 * **poskytnúť stromovú vizualizáciu argumentov (v4)**
 * **poskytnúť decision trail pre každého používateľa (v4)**
 * **zaznamenávať každé dôležité rozhodnutie do audit logu (v4)**
+* **poskytnúť ku každému argumentu diskusné vlákno (v5)**
+* **umožniť typované príspevky (question, suggestion, support, objection, clarification, evidence) (v5)**
+* **udržiavať stromovú štruktúru diskusie (parent_post_id) (v5)**
+* **obmedziť maximálnu hĺbku vlákna (napr. 5 úrovní) (v5)**
+* **poskytnúť AI sumarizáciu dlhých vlákien (v5)**
 
 ---
 
@@ -812,7 +936,7 @@ Systém musí:
   "quality_score": 0.87,
   "popularity_score": 0.79,
   
-  "impact_metrics": {  // NOVÉ v v4
+  "impact_metrics": {
     "impact_score": 0.72,
     "influenced_decisions": ["dec_001", "dec_003"],
     "support_shift": +0.15,
@@ -834,6 +958,7 @@ Zoradené podľa: [Kvality ▼]  [Popularity]  [Kombinované]  [Impactu ▼]
    ✅ Logicky konzistentné | 📊 Podložené štúdiou | 💥 Vysoký impact
    [8 people found this insightful]
    [Ovplyvnilo 2 rozhodnutia]
+   💬 12 príspevkov v diskusii (3 otázky, 2 námietky)
 
 2. 🧠 Q=0.88 | P=0.82 | I=0.45
    "Lokálne suroviny sú príliš drahé"
@@ -862,7 +987,7 @@ Zoradené podľa: [Kvality ▼]  [Popularity]  [Kombinované]  [Impactu ▼]
     },
     "default_sorting": "quality",
     "show_unpopular_quality_arguments": true,
-    "impact_weights": {  // NOVÉ v v4
+    "impact_weights": {
       "support_shift": 0.4,
       "branch_creation": 0.2,
       "branch_merger": 0.2,
@@ -873,7 +998,7 @@ Zoradené podľa: [Kvality ▼]  [Popularity]  [Kombinované]  [Impactu ▼]
 }
 ```
 
-### Príklad 4: Tree Visualization (NOVÉ v v4)
+### Príklad 4: Tree Visualization
 
 ```json
 {
@@ -931,7 +1056,7 @@ Zoradené podľa: [Kvality ▼]  [Popularity]  [Kombinované]  [Impactu ▼]
 }
 ```
 
-### Príklad 5: Decision Trail (NOVÉ v v4)
+### Príklad 5: Decision Trail
 
 ```json
 {
@@ -973,6 +1098,79 @@ Zoradené podľa: [Kvality ▼]  [Popularity]  [Kombinované]  [Impactu ▼]
 }
 ```
 
+### Príklad 6: Threading a diskusné príspevky (NOVÉ v v5)
+
+```json
+{
+  "argument_id": "arg_cf_001",
+  "claim": "Buduje komunitu",
+  "thread": {
+    "thread_id": "thread_arg_cf_001",
+    "summary": "Diskusia o tom, ako crowdfunding buduje komunitu. Hlavné otázky: aké konkrétne aktivity, aký je odhadovaný dosah.",
+    "posts": [
+      {
+        "post_id": "post_001",
+        "parent_post_id": null,
+        "author_id": "user_miro_001",
+        "type": "argument",
+        "content": "Crowdfunding buduje komunitu – ľudia sa cítia byť súčasťou niečoho väčšieho.",
+        "created_at": "2026-04-15T10:00:00Z",
+        "quality_score": 0.91
+      },
+      {
+        "post_id": "post_002",
+        "parent_post_id": "post_001",
+        "author_id": "user_jana_001",
+        "type": "question",
+        "content": "Aké konkrétne aktivity myslíš, že najviac budujú komunitu?",
+        "created_at": "2026-04-15T11:00:00Z",
+        "resolved": true,
+        "resolved_at": "2026-04-15T12:00:00Z"
+      },
+      {
+        "post_id": "post_003",
+        "parent_post_id": "post_002",
+        "author_id": "user_miro_001",
+        "type": "clarification",
+        "content": "Pravidelné updatey, Q&A session, oslava pri dosiahnutí cieľa, možnosť zapojiť sa do rozhodovania o bonusoch.",
+        "created_at": "2026-04-15T12:00:00Z"
+      },
+      {
+        "post_id": "post_004",
+        "parent_post_id": "post_001",
+        "author_id": "user_peter_001",
+        "type": "support",
+        "content": "Podľa štúdie Y projekty s komunitným crowdfundingom majú o 40% vyššiu mieru udržania zákazníkov.",
+        "created_at": "2026-04-15T13:00:00Z",
+        "evidence": ["Štúdia Y, 2024"]
+      },
+      {
+        "post_id": "post_005",
+        "parent_post_id": "post_001",
+        "author_id": "user_zuzana_001",
+        "type": "objection",
+        "content": "Ale crowdfunding môže vytvoriť len ilúziu komunity, ak sa ľudia nezapájajú aj po skončení kampane.",
+        "created_at": "2026-04-15T14:00:00Z"
+      },
+      {
+        "post_id": "post_006",
+        "parent_post_id": "post_005",
+        "author_id": "user_miro_001",
+        "type": "clarification",
+        "content": "Súhlasím, preto navrhujeme pravidelný komunitný newsletter a štvrťročné stretnutia.",
+        "created_at": "2026-04-15T15:00:00Z"
+      }
+    ],
+    "statistics": {
+      "total_posts": 6,
+      "unresolved_questions": 0,
+      "unanswered_objections": 0,
+      "last_activity": "2026-04-15T15:00:00Z"
+    }
+  }
+}
+```
+
 ---
 
 ## 9. 🔥 Zhrnutie
@@ -989,51 +1187,57 @@ Argument môže posilniť, oslabiť alebo vytvoriť vetvu – ale nikdy nepridá
 * **Užívateľské hodnotenie** – agree, disagree, clarify, off-topic, insightful
 * **Oddelenie kvality od popularity** – populárny ≠ kvalitný
 
-**V4 prináša:**
+**V4 priniesla:**
 
 * **Impact Metrics** – meranie vplyvu argumentov na rozhodnutia
 * **Tree Visualization** – stromová vizualizácia argumentov a vetiev
 * **Decision Trail** – sledovanie rozhodovacej cesty každého používateľa
-* **Prepojenie na Support & Alignment** – impact sledovaný cez zmeny v podpore
+
+**V5 prináša:**
+
+* **Threading** – každý argument má vlastné diskusné vlákno
+* **Typy príspevkov** – question, suggestion, support, objection, clarification, evidence
+* **Stromová štruktúra diskusie** – zachovanie kontextu
+* **AI sumarizácia vlákien** – prehľadnosť dlhých diskusií
 
 ---
 
 ## 10. 🧭 Finálna veta
 
-> **V Synergetiku nemá vplyv ten, kto hovorí – ale to, čo prežije konfrontáciu s inými myšlienkami. A ani popularita nerobí argument pravdou – len kvalita rozhoduje o jeho sile. A každé rozhodnutie je spätne dohľadateľné k argumentom, ktoré ho ovplyvnili.**
+> **V Synergetiku nemá vplyv ten, kto hovorí – ale to, čo prežije konfrontáciu s inými myšlienkami. A ani popularita nerobí argument pravdou – len kvalita rozhoduje o jeho sile. A každé rozhodnutie je spätne dohľadateľné k argumentom, ktoré ho ovplyvnili. A každý argument je živou diskusiou – s otázkami, návrhmi, podporou a námietkami.**
 
-V komplexných problémoch nevyhráva ten, kto kričí najhlasnejšie – ale ten, koho argument prežije najviac otázok. A nevyhráva ani ten, koho argument má najviac lajkov. A každý používateľ vidí, prečo sa rozhodol tak, ako sa rozhodol.
+V komplexných problémoch nevyhráva ten, kto kričí najhlasnejšie – ale ten, koho argument prežije najviac otázok. A nevyhráva ani ten, koho argument má najviac lajkov. A každý používateľ vidí, prečo sa rozhodol tak, ako sa rozhodol. A každý môže prispieť do diskusie štruktúrovaným spôsobom.
 
 ---
 
 **Dátum:** 2026-04-15  
 **Stav:** Accepted  
 **Typ:** Core Mechanism ADR (Conceptual Projects)  
-**Verzia:** 4.0 (Hardened with Impact Metrics & Tree Visualization)
+**Verzia:** 5.0 (Hardened with Threading & Discussion Posts)
 
 ---
 
-## 📝 Zoznam zmien oproti Version 3
+## 📝 Zoznam zmien oproti Version 4
 
 | Sekcia | Zmena |
 |--------|-------|
-| 1. Status | Zmenené na v4 |
-| 2. Kontext | Doplnený dodatočný problém (netransparentný vplyv, chýbajúca spätná väzba) |
-| 3.1 | Doplnené meranie vplyvu a stromová vizualizácia |
-| 3.3 | Doplnené `Influenced Decisions` a `Impact Score` do štruktúry argumentu |
-| 3.19 | **Nová sekcia:** Impact Metrics – meranie vplyvu argumentov |
-| 3.20 | **Nová sekcia:** Tree Visualization – stromová vizualizácia |
-| 3.21 | **Nová sekcia:** Decision Trail – sledovanie rozhodovacej cesty |
-| 3.8 | Rozšírené úlohy AI o impact odhad a generovanie stromu |
-| 3.9 | Rozšírený Impact Model o merateľnosť a vizualizáciu |
-| 3.14 | Rozšírený View Layer o strom, decision trail a impact zobrazenie |
-| 4. Pozitíva | Doplnené spätná väzba rozhodnutí, auditovateľnosť, vzdelávací efekt |
-| 4. Negatíva | Doplnené kauzalita vs korelácia, možná manipulácia impactu |
-| 5. Alternatívy | Doplnené "žiadne meranie impactu" a "len lineárny zoznam" |
-| 6. Väzby | Doplnené ADR-044 (Impact Visualization) |
-| 7. Implementácia | Doplnené pravidlá pre impact metrics, tree visualization, decision trail |
-| 8.4 | **Nová sekcia:** Príklad 4 – Tree Visualization |
-| 8.5 | **Nová sekcia:** Príklad 5 – Decision Trail |
-| 8.1-8.3 | Rozšírené príklady o impact metrics |
-| 9. Zhrnutie | Doplnené v4 princípy |
-| 10. Finálna veta | Rozšírená o rozhodovaciu cestu |
+| 1. Status | Zmenené na v5 |
+| 2. Kontext | Doplnený dodatočný problém (chýbajúca štruktúrovaná diskusia) |
+| 3.1 | Doplnené diskusné vlákna a typované príspevky |
+| 3.2 | Rozšírené o thread pre každý argument |
+| 3.3 | Doplnené `Thread` do štruktúry argumentu |
+| 3.6 | Rozšírený argument graph o diskusné vlákna |
+| 3.22 | **Nová sekcia:** Threading a typy diskusných príspevkov |
+| 3.8 | Rozšírené úlohy AI o sumarizáciu threadov a detekciu hĺbky |
+| 3.12 | Rozšírené o ochranu pred dominanciou v threadoch |
+| 3.13 | Rozšírený výstup projektu o discussion threads |
+| 3.14 | Rozšírený View Layer o zobrazenie threadov a pridávanie príspevkov |
+| 3.15 | Rozšírené o auditovateľný záznam diskusných príspevkov |
+| 4. Pozitíva | Doplnené štruktúrovaná diskusia, prehľadnosť, živá argumentácia |
+| 4. Negatíva | Doplnené správa threadov, úložné nároky |
+| 5. Alternatívy | Doplnené "iba argumenty bez diskusných vlákien" |
+| 6. Väzby | Doplnené ADR-027 (View Layer) |
+| 7. Implementácia | Doplnené pravidlá pre threading, typy príspevkov, maximálnu hĺbku, sumarizáciu |
+| 8.6 | **Nová sekcia:** Príklad 6 – Threading a diskusné príspevky |
+| 9. Zhrnutie | Doplnené v5 princípy |
+| 10. Finálna veta | Rozšírená o diskusné vlákna a typy príspevkov |
