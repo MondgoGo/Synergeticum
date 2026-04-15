@@ -146,6 +146,42 @@ Rozšírená verzia participation logiky. Definuje participation score, relevanc
 
 Definuje vnútorný model Personal AI. Teda čo presne obsahuje: záujmy, schopnosti, preferencie, participačné vzorce, kognitívne rozloženie a eventy.
 
+## ADR-035 — Sustainability & Incentive Model
+
+Definuje, ako je systém financovaný a udržateľný bez porušenia princípov súkromia a vlastníctva. Rieši granty, parent node služby, open-source model a to, prečo nie je závislý na predaji dát alebo reklame.
+
+## ADR-036 — Reciprocity & Value Exchange Model
+
+Definuje, ako systém prirodzene odmeňuje participáciu kvalitnejšími výstupmi – bez bodov, rebríčkov alebo gamifikácie. Rieši cost asymmetry (neparticipácia = absencia benefitov, nie penalizácia) a to, ako používateľ vníma, že jeho participácia má zmysel.
+
+## ADR-037 — Identity Recovery & Continuity Model
+
+Definuje, ako používateľ nestráca svoju digitálnu identitu pri strate zariadenia. Rieši multi-path recovery (parent node, trusted circle, offline seed), identity branching (obnova = nová vetva) a psychologickú kontinuitu „ja“ v systéme.
+
+---
+
+## ADR-038 — Power & Influence Balancing
+
+Definuje, kto má vplyv v systéme a prečo. Rieši mitigáciu dominancie hlasných alebo silných aktérov, reputáciu bez centralizácie a ochranu pred vznikom „elitného“ systému. (Návrh, implementácia až po pilotovi.)
+
+## ADR-039 — Truth & Epistemic Model
+
+Definuje, čo je pravda v distribuovanom systéme bez centrálnej autority. Rieši vzťah medzi konsenzom, expertízou a kvalitou argumentácie – a to, že väčšina nie je automaticky pravda. (Návrh, implementácia až po pilotovi.)
+
+## ADR-040 — Graceful Degradation
+
+Definuje, ako systém zostáva použiteľný aj pri nízkej kvalite vstupov, hluku, pasivite alebo útokoch. Rieši toleranciu voči chaosu a to, že degradácia je plynulá, nie prudká. (Princíp je v ADR-000, detailné mechanizmy tu.)
+
+## ADR-041 — Recovery Storage & Snapshot Strategy
+
+Definuje konkrétne technické parametre recovery – frekvenciu snapshotov, šifrovací algoritmus, počet a umiestnenie shardov, threshold pre obnovu a maximálnu stratu dát. (Implementačný detail k ADR-037.)
+
+## ADR-042 — Unified Entity Model (Node)
+Definícia `Node` ako univerzálneho typu s poliami: `node_id`, `node_type`, `name`, `attributes`, `relations`, `rights`
+Definícia `node_type` enum: `Project`, `Topic`, `Argument`, `Question`, `Event`, `Person`, `Branch`
+Vzťahy medzi Node-mi (orientovaný graf): `parent_of`, `classified_as`, `supported_by`, `opposes`, `forked_from`, `merged_into`
+
+
 ---
 
 # Poznámka k poradiu a prekryvom
@@ -181,6 +217,7 @@ Ak si to chceš usporiadať do logických balíkov:
 * ADR-007
 * ADR-008
 * ADR-034
+* ADR-042
 
 ## C. Otázky, interakcia a personalizácia
 
