@@ -181,6 +181,10 @@ Definícia `Node` ako univerzálneho typu s poliami: `node_id`, `node_type`, `na
 Definícia `node_type` enum: `Project`, `Topic`, `Argument`, `Question`, `Event`, `Person`, `Branch`
 Vzťahy medzi Node-mi (orientovaný graf): `parent_of`, `classified_as`, `supported_by`, `opposes`, `forked_from`, `merged_into`
 
+## ADR-045 — Calendar & Event Coordination
+Definícia `Event` ako špecifický typ Node – s atribútmi `start_time`, `end_time`, `location`, `recurrence`.
+Eventy môžu byť spojené s projektom, vetvou, argumentom alebo témou.
+Notifikačný mechanizmus (opt-in, lokálne rozhodnutie, nie centrálny server).
 
 ---
 
@@ -252,6 +256,7 @@ Ak si to chceš usporiadať do logických balíkov:
 * ADR-029
 * ADR-030
 * ADR-031
+* ADR-045
 
 ---
 
