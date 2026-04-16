@@ -255,7 +255,6 @@ Ak si to chceš usporiadať do logických balíkov:
 * ADR-007
 * ADR-008
 * ADR-034
-* ADR-042
 
 ## C. Otázky, interakcia a personalizácia
 
@@ -274,39 +273,44 @@ Ak si to chceš usporiadať do logických balíkov:
 * ADR-017
 * ADR-033
 
-# 📘 **KAPITOLA E — Domain Model (Projects & Entities)**
+## KAPITOLA E — Domain Model (Projects & Entities)
 👉 „čo projekt JE“
 * ADR-022 — Collective Project Formation
 * ADR-023 — Distributed Project Object Model
 * ADR-024 — Multi-Variant Project Governance
 * ADR-026 — Project Roles & Permission Model
 * ADR-042 — Unified Entity Model (Node)
+* ADR-075 — Domain State vs Process Boundary
+* ADR-076 — Typed Projections over Node
+* ADR-077 — Minimal Viable Project Definition
+* ADR-078 — Topic vs Project Transition Contract
+* ADR-082 — Domain Validation Rules
 
-# 📗 **KAPITOLA F — Kolektívna inteligencia (Reasoning & Truth)**
+## KAPITOLA F — Kolektívna inteligencia (Reasoning & Truth)
 👉 „ako projekt myslí“
 * ADR-025 — Argumentation & Reasoning Model
 * ADR-028 — Support & Alignment Model
 * ADR-038 — Power & Influence Balancing
 * ADR-039 — Truth & Epistemic Model
 
-# 📙 **KAPITOLA G — Vznik a príležitosti (Formation Layer)**
+## KAPITOLA G — Vznik a príležitosti (Formation Layer)
 👉 „prečo niečo vznikne“
 * ADR-018 — Simulation Engine
 * ADR-019 — Opportunity Engine
 * ADR-031 — Topic Layer & Project Formation
 
-# 📕 **KAPITOLA H — Život projektu (Lifecycle & Operations)**
+## KAPITOLA H — Život projektu (Lifecycle & Operations)
 👉 „ako projekt žije alebo zomiera“
 * ADR-029 — Branch Lifecycle Model
-* ADR-030 — Sync & Persistence Strategy
 * ADR-027 — Project View & Simplification Model
 * ADR-020 — Growth Model
 * ADR-045 — Calendar & Event Coordination
 
-# 📕 **Kapitola I — Infra & Runtime Layer
+## Kapitola I — Infra & Runtime Layer
 * ADR-I-000 — Infra Layer Definition
 * ADR-I-001 — Runtime Execution Model
 * ADR-I-002 — Compute Budget & Model Constraints
+* ADR-I-003 — Event Processing & Scheduling Model
 * ADR-021 Parent Node Architecture
 * ADR-030 Sync & Persistence Strategy
 * ADR-041 (Recovery Storage & Snapshot Strategy)
