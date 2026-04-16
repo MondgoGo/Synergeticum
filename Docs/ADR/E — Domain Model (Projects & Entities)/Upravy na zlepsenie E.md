@@ -867,16 +867,16 @@ Pre pilot by som preto držal túto líniu:
 
 ## čo je pripravené skoro
 
-* ADR-042
+upravene * ADR-042
 * ADR-075
-* ADR-076
+skontrolovať, či je **ADR-076 plne zladené s touto novou verziou 042** * ADR-076
 upravene * ADR-077
 * ADR-082
 
 ## čo treba zjednodušiť pre pilot
 
 upravene * ADR-022
-* ADR-023
++* ADR-023
 * ADR-024
 upravene * ADR-078
 * ADR-026
