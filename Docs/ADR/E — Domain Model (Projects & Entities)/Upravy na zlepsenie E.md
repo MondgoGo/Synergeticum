@@ -869,7 +869,7 @@ Pre pilot by som preto držal túto líniu:
 
 upravene * ADR-042
 * ADR-075
-skontrolovať, či je **ADR-076 plne zladené s touto novou verziou 042** * ADR-076
+upravene * ADR-076
 upravene * ADR-077
 * ADR-082
 
@@ -890,3 +890,11 @@ upravene * ADR-078
 
 Ak chceš, ďalší krok spravím veľmi prakticky:
 môžem ti z tohto pripraviť **„Pilot Domain Model Profile“** — teda ktoré entity, polia, vzťahy a stavy naozaj zaviesť v prvej verzii a čo odložiť.
+
+
+Skus zapracovat tvoje proipomienky do 076. 
+Je to dolezite. Daj si pozor. Inak to ze bude domain a entity model neznamena, ze sa to musi aj v pilot realizovat. 
+Chcem to mat co najobsaznejsie, nech sa podchyti komplexity, ktpora sa bude zavadzat postupne. 
+Mysli na to. Daj pozor, aby tam bolo vsetko, co treba, toto uz mozno pojde architektovi. 
+Vyledok  by mal byt finalna verziu pre srchitekta!!!
+Tvoje posledne komentare:
