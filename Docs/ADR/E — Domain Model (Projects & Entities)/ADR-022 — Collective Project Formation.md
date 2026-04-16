@@ -1,430 +1,430 @@
-# 🧾 ADR-022: Collective Project Formation
+Áno. Toto ADR treba pritvrdiť a premeniť z vízie na **architektonický kontrakt**.
+Tvoja diagnostika je presná: najväčší problém je, že dnes nie je dosť jasné:
+
+* čo je input,
+* čo je output,
+* čo je presný formation flow,
+* a čo je ešte len prezentačný jazyk.
+
+Nižšie je **prepracovaná verzia ADR-022**, už zladená s:
+
+* ADR-075 (state vs process) 
+* ADR-076 (typed projections + command layer) 
+* ADR-077 (MVPj) 
+* ADR-078 (Topic → Project transition) 
+* a opravuje slabiny pôvodného ADR-022 
 
 ---
 
+````md
+# 🧾 ADR-022 — Collective Project Formation
+
 ## 1. 📌 Status
 
-**Proposed**
+**Proposed (v2)**
 
 ---
 
 ## 2. 🎯 Kontext
 
-Systém Personal AI Network umožňuje:
+Synergetikum umožňuje:
 
-* kladenie otázok
-* kolektívne odpovede (Collective Query – ADR-016)
-* simuláciu scenárov (ADR-018)
-* identifikáciu zapojenia (ADR-019)
+- vznik otázok a Topicov (ADR-009, ADR-031)
+- kolektívne odpovede a signály záujmu (ADR-016)
+- identifikáciu príležitostí (ADR-019)
+- vznik projektov z topicov (ADR-078)
 
----
+Doteraz systém pokrýva najmä:
 
-Doteraz systém pokrýva:
+- myslenie
+- diskusiu
+- perspektívy
+- signály záujmu
 
-👉 myslenie, diskusiu, perspektívy
+V reálnej implementácii však vzniká zásadný problém:
 
----
+> **Ako sa z kolektívnej diskusie stane konkrétny projektový objekt, ktorý už má minimálnu štruktúru, zodpovednosť a smer?**
 
-### Problém
+Bez jasného formation kontraktu hrozí:
 
-V systéme vznikajú situácie, kde:
-
-* viac používateľov prejaví záujem o rovnakú vec
-* existujú konkrétne návrhy riešení
-* objavujú sa ľudia, ktorí vedia prispieť
-
----
-
-👉 ale systém nemá mechanizmus, ktorý by:
-
-* tieto signály zachytil
-* štrukturoval
-* transformoval na realizovateľný projekt
-
----
-
-### Kľúčová otázka
-
-👉
-**Ako transformovať kolektívne odpovede a záujem na konkrétny projekt bez centrálneho riadenia?**
+| Riziko | Dôsledok |
+|--------|----------|
+| Pseudo-projekty | Topic s minimálnou aktivitou vytvorí „projekt“ |
+| Nekonzistentný vznik | Raz vzniká projekt automaticky, raz ručne, raz vôbec |
+| Nejasný storage model | Architekt nevie, aké entity sa reálne vytvárajú |
+| Strata kontextu | Projekt nevie, z akej diskusie vznikol |
+| Chaos vo vrstvách | Mieša sa doménový objekt, workflow a view |
 
 ---
 
 ## 3. ⚖️ Rozhodnutie
 
----
+Systém zavádza **Collective Project Formation** ako **process layer**, nie ako samostatný „dokumentový typ“.
 
-## 🧠 3.1 Zavedenie „Project Formation Layer“
+> **Project Formation nie je entita. Je to proces, ktorý transformuje Topic na Project v stave `forming`, ak sú splnené definované podmienky.**
 
-Systém bude obsahovať vrstvu:
+To znamená:
 
-👉 **Collective Project Formation Layer**
-
----
-
-Táto vrstva:
-
-* deteguje vznikajúce zámery
-* vytvára projektové entity
-* umožňuje ich evolúciu
+- nevzniká „Living Project Document“ ako nová core doménová entita
+- vzniká **Project Node / Project Domain Object**
+- vzniká **Initial Branch**
+- zachováva sa väzba na **Origin Topic**
 
 ---
 
----
+## 4. 🧠 Čo Project Formation JE a čo NIE JE
 
-## 📄 3.2 Entita: Living Project Document
+### 4.1 Project Formation JE
 
----
+Project Formation je:
 
-Systém zavádza novú entitu:
+- procesná vrstva
+- sada pravidiel a commandov
+- kontrolovaný prechod z Topicu do Projectu
+- miesto, kde sa extrahuje minimálna počiatočná štruktúra projektu
 
-👉 **Living Project Document (LPD)**
+### 4.2 Project Formation NIE JE
 
----
+Project Formation nie je:
 
-### Definícia
-
-Dynamický, kolektívne vytváraný objekt, ktorý:
-
-* vzniká z diskusie
-* priebežne sa aktualizuje
-* reprezentuje projekt
-
----
+- nový typ Node
+- nový dokumentový formát
+- view layer
+- prezentačný profil
 
 ---
 
-## 🔄 3.3 Lifecycle projektu
+## 5. 📥 Formation Input Contract
+
+Project Formation pracuje s nasledujúcimi vstupmi:
+
+### 5.1 Primárny vstup: Topic
+
+Topic musí byť existujúci a validný podľa ADR-031 a ADR-078.
+
+### 5.2 Vstupné signály z Topicu
+
+Formation process môže pracovať s:
+
+| Vstup | Popis |
+|-------|-------|
+| `interest_level` | agregovaný záujem o tému |
+| `participant_count` | počet relevantných participantov |
+| `commitment_signals` | explicitné alebo implicitné signály záväzku |
+| `directions` | identifikované smery riešenia |
+| `problem candidates` | formulácie problému |
+| `resource hints` | kto vie prispieť, aké capability sú dostupné |
+| `risk hints` | identifikované riziká a námietky |
+
+### 5.3 Human confirmation
+
+Formation nikdy nekončí bez explicitného ľudského potvrdenia, ak sa nejedná o ručné založenie projektu.
 
 ---
 
-### Fáza 1: Signal Detection
+## 6. 📤 Formation Output Contract
 
-Systém deteguje:
+Ak formation uspeje, systém vytvorí presne tieto doménové objekty:
 
-* opakujúce sa témy
-* vysoký záujem
-* konkrétne návrhy
+### 6.1 Project
+
+Nový `Project` v stave:
+
+```text
+lifecycle_stage = forming
+````
+
+Projekt musí byť aspoň **existenčne validný** podľa ADR-077.
+
+### 6.2 Initial Branch
+
+Systém vytvorí počiatočnú vetvu projektu:
+
+* `initial_branch`
+* parent = null
+* project_id = nový projekt
+
+Táto vetva predstavuje prvý realizovateľný smer projektu.
+
+### 6.3 Linkage
+
+Musia vzniknúť väzby:
+
+* `project.origin_topic_id = topic.id`
+* `topic.project_reference = project.id`
+
+### 6.4 Initial participant set
+
+Do projektu sa prenášajú iba tí participanti, ktorí:
+
+* potvrdili záujem,
+* alebo sú explicitne súčasťou formation procesu.
 
 ---
 
-👉 identifikuje:
+## 7. 🔄 Formation Lifecycle (procesné fázy)
 
-**potenciálny projekt**
+### Fáza 1 — Topic maturity detection
 
----
+Systém alebo participanti identifikujú, že Topic dozrel na kandidáta projektu.
 
----
+Toto je riešené cez ADR-078.
 
-### Fáza 2: Initialization
+Výstup:
+
+* Topic je `candidate_for_project`
+
+### Fáza 2 — Formation preparation
+
+Systém pripraví návrh projektového minima z Topicu:
+
+* pracovný názov projektu
+* problem statement
+* možné smery
+* potenciálnych participantov
+* základné riziká
+
+### Fáza 3 — Human confirmation
+
+Používatelia potvrdia, že chcú Topic transformovať na Project.
+
+Bez potvrdenia sa Project nevytvorí.
+
+### Fáza 4 — Project creation
 
 Systém vytvorí:
 
-👉 základný projektový záznam
+* nový Project (`forming`)
+* initial branch
+* linkage na Topic
+
+### Fáza 5 — Post-formation stabilization
+
+Po vzniku projektu:
+
+* Topic ostáva historickým a diskusným kontextom
+* Project sa ďalej vyvíja už vo vlastnej vrstve
+* ďalšie zmeny v Topicu už priamo neprepísujú projekt
 
 ---
 
-Obsah:
+## 8. 🧠 Minimálny obsah vytvorený pri formation
 
-* názov
-* kontext
-* pôvodná otázka
+Formation process sa snaží vytvoriť minimálne:
 
----
+| Pole                | Zdroj                                       |
+| ------------------- | ------------------------------------------- |
+| `name`              | Topic name alebo extrahovaný pracovný názov |
+| `problem_statement` | extrahované z diskusie                      |
+| `origin_topic_id`   | Topic                                       |
+| `owner_id`          | iniciátor alebo potvrdený zakladateľ        |
+| `participant_ids`   | potvrdení účastníci                         |
+| `initial_branch_id` | novo vytvorená vetva                        |
+| `goal_statement`    | ak sa dá spoľahlivo extrahovať              |
+| `success_criteria`  | voliteľné, ak existujú                      |
 
----
-
-### Fáza 3: Structuring
-
-Systém extrahuje z odpovedí:
-
----
-
-#### 📌 Problém
-
-čo chýba / čo treba riešiť
+Ak sa tieto dáta nepodarí pripraviť aspoň na existenčné minimum, formation musí zlyhať alebo ostať v prípravnom stave.
 
 ---
 
-#### 📌 Navrhované riešenie
+## 9. 🚫 „Living Project Document“ ako vysvetľujúci pojem
 
-čo sa navrhuje
+Pojem **Living Project Document** môže zostať ako:
 
----
+* vysvetľujúca metafora,
+* user-facing jazyk,
+* opis dynamickej povahy projektu.
 
-#### 📌 Dopyt
+Ale:
 
-koľko ľudí prejavilo záujem
+> **nie je to core doménová entita.**
 
----
+Core doménové entity sú:
 
-#### 📌 Zdroje
+* `Project`
+* `Branch`
+* `Topic`
+* `Argument`
+* `Person`
 
-ľudia, ktorí sa chcú zapojiť
-
----
-
-#### 📌 Riziká
-
-identifikované problémy
-
----
+To je dôležité, aby architekt nemodeloval „dokument“, ale stabilný domain objekt.
 
 ---
 
-### Fáza 4: Human Validation
+## 10. 🖼️ Insight / Proposal / Project ako presentation profiles
 
-Používatelia môžu:
+Pôvodné typy:
 
-* potvrdiť obsah
-* upraviť
-* rozšíriť
+* Insight Document
+* Proposal Document
+* Project Document
 
----
+sa v tejto ADR nepovažujú za core doménové typy.
 
-👉 človek má finálne slovo
+Namiesto toho sa berú ako:
 
----
+> **presentation / workflow profiles nad rovnakým doménovým základom**
 
----
+Teda:
 
-### Fáza 5: Activation
+| Profil     | Význam                             |
+| ---------- | ---------------------------------- |
+| `Insight`  | sumarizačný pohľad na diskusiu     |
+| `Proposal` | návrhový pohľad na možný smer      |
+| `Project`  | akčný pohľad na existujúci projekt |
 
-Projekt sa aktivuje, ak:
+Tieto profily patria skôr do:
 
-* dosiahne dostatočný záujem
-* existujú zdroje
-* existuje iniciátor
+* view layer,
+* workflow layer,
+* alebo UI.
 
----
-
----
-
-### Fáza 6: Execution (mimo core systému)
-
-Systém:
-
-* môže podporovať koordináciu
-
-ALE:
-
-👉 neriadi realizáciu
+Nie do core domain modelu.
 
 ---
 
----
+## 11. 🤝 Úloha človeka
 
-## 🧠 3.4 Typy projektových dokumentov
+Project Formation nesmie byť plne autonómny.
 
----
+Systém môže:
 
-### 🟢 Insight Document
+* detegovať zámery,
+* navrhovať projektové minimum,
+* extrahovať smery,
+* sumarizovať problém.
 
-* sumarizácia diskusie
+Ale:
 
----
+> **človek má finálne slovo pri vzniku projektu.**
 
-### 🔵 Proposal Document
+To je dôležité kvôli:
 
-* návrh riešenia
-
----
-
-### 🔴 Project Document
-
-* konkrétny projekt
-
----
+* dôvere,
+* zodpovednosti,
+* non-manipulation,
+* human-in-the-loop.
 
 ---
 
-## 🤝 3.5 Prepojenie s používateľmi
+## 12. 🔐 Ochrana súkromia
+
+Formation process musí rešpektovať privacy-first princípy:
+
+* nevyžaduje surové osobné dáta
+* pracuje so signálmi, nie s plnými profilmi
+* participanti sa prenášajú len, ak to explicitne potvrdili
+* Topic môže byť zdrojom agregovaných poznatkov, nie raw exportov
 
 ---
 
-Každý používateľ vidí projekt:
+## 13. 🧠 Dôsledky rozhodnutia
 
-👉 cez svoju Personal AI
+### ✅ Pozitíva
 
----
+| Dôsledok                        | Popis                                      |
+| ------------------------------- | ------------------------------------------ |
+| Jasný formation contract        | Architekt vie, čo vzniká a kedy            |
+| Menší chaos vo vrstvách         | entita ≠ proces ≠ view                     |
+| Žiadny pseudo-dokumentový model | core doména ostáva čistá                   |
+| Lepšia implementovateľnosť      | formation je command/process, nie metafora |
+| Priame prepojenie na MVPj       | vznikajú len existenčne validné projekty   |
 
-Systém mu navrhne:
+### ❗ Negatíva / Trade-offs
 
-* ako sa môže zapojiť
-* akú rolu môže mať
-
----
-
----
-
-## 🔄 3.6 Evolúcia projektu
-
----
-
-Living Project Document:
-
-* sa mení v čase
-* môže rásť
-* môže zaniknúť
+| Dôsledok                      | Mitigácia                           |
+| ----------------------------- | ----------------------------------- |
+| Vyššia disciplína pri návrhu  | ale nižší chaos neskôr              |
+| Menej poetický model          | ale výrazne lepší pre implementáciu |
+| Potreba ďalších ADR na detail | už riešené v 075 / 077 / 078        |
 
 ---
 
-👉 nie je statický
+## 14. 🚫 Alternatívy (zamietnuté)
+
+### ❌ Living Project Document ako core entita
+
+Zamietnuté, lebo:
+
+* je to metafora, nie presný domain model
+* môže viesť k nejednotnej implementácii
+
+### ❌ Manuálne zakladanie projektov bez väzby na Topic
+
+Zamietnuté ako default, lebo:
+
+* stráca sa kolektívny kontext
+* vzniká chaos a duplicita
+
+### ❌ Plne automatický vznik projektu
+
+Zamietnuté, lebo:
+
+* porušuje human-in-the-loop
+* znižuje dôveru
+* vedie k predčasným projektom
 
 ---
 
----
+## 15. 🔗 Väzby na ďalšie ADR
 
-## 🚫 3.7 Bez centrálneho riadenia
-
----
-
-Projekt NESMIE byť:
-
-* centrálne schvaľovaný
-* riadený autoritou systému
-
----
-
-👉 vzniká emergentne
-
----
+| ADR     | Vzťah                                                 |
+| ------- | ----------------------------------------------------- |
+| ADR-016 | query a odpovede generujú vstupy                      |
+| ADR-019 | opportunity signals pomáhajú identifikovať kandidatov |
+| ADR-023 | výsledný projekt je distribuovaný objekt              |
+| ADR-024 | formation vytvára initial branch                      |
+| ADR-031 | Topic je vstupná entita                               |
+| ADR-075 | formation je process, nie state                       |
+| ADR-076 | výstup sa mapuje do doménových projekcií              |
+| ADR-077 | project po formation musí byť existenčne validný      |
+| ADR-078 | tento ADR určuje, kedy Topic dozrel na Project        |
 
 ---
 
-## 🔐 3.8 Ochrana súkromia
-
----
-
-Pri tvorbe projektu:
-
-* sa používajú anonymizované vstupy
-* Personal AI neposiela surové dáta
-* identita používateľa je chránená
-
----
-
----
-
-## 4. 🧠 Dôsledky rozhodnutia
-
----
-
-## ✅ Pozitíva
-
----
-
-### 🔗 Prepojenie ľudí
-
-* vznik spolupráce
-
----
-
-### ⚙️ Transformácia myslenia na akciu
-
-* systém má reálny dopad
-
----
-
-### 📈 Vznik iniciatív
-
-* projekty vznikajú prirodzene
-
----
-
----
-
-## ❗ Negatíva / Trade-offs
-
----
-
-### ⚠️ Falošné projekty
-
-* veľa návrhov bez realizácie
-
----
-
-### 📉 Overload
-
-* príliš veľa projektov
-
----
-
-### 🧩 Koordinačný chaos
-
-* nejasné role
-
----
-
----
-
-## 5. 🚫 Alternatívy (zamietnuté)
-
----
-
-### ❌ Manuálne zakladanie projektov
-
-* neškálovateľné
-* nevyužíva kolektívnu inteligenciu
-
----
-
----
-
-### ❌ Centrálne kurátorovaný systém
-
-* kontrolovaný
-* ale:
-
-  * strata decentralizácie
-
----
-
----
-
-## 6. 🔗 Väzby na ďalšie ADR
-
----
-
-* ADR-016 (Collective Query)
-* ADR-019 (Opportunity Engine)
-* ADR-014 (P2P Network)
-* ADR-011 (Personalization)
-
----
-
----
-
-## 7. 📏 Pravidlá implementácie (high-level)
-
----
+## 16. 📏 Pravidlá implementácie (high-level)
 
 Systém musí:
 
-* detegovať vznikajúce zámery
-* extrahovať štruktúrované informácie
-* umožniť editáciu používateľmi
-* definovať threshold pre aktiváciu
+1. pracovať s Topicom ako primárnym inputom
+2. extrahovať projektové minimum zo signálov a diskusie
+3. vytvárať výstup ako:
+
+   * `Project`
+   * `Initial Branch`
+   * `Topic ↔ Project linkage`
+4. nebrať „Living Project Document“ ako core storage entitu
+5. presunúť Insight / Proposal / Project document typy do view/workflow vrstvy
+6. vyžadovať human confirmation pred final creation
+7. nevytvárať projekt, ktorý nespĺňa existenčné minimum podľa ADR-077
 
 ---
 
----
+## 17. 🔥 Zhrnutie
 
-# 🔥 8. Zhrnutie
-
----
-
-👉
-**Systém transformuje kolektívne odpovede na živé projektové dokumenty, ktoré môžu viesť k reálnym aktivitám a spolupráci.**
+> **Collective Project Formation nie je dokument. Je to proces, ktorý transformuje dozretý Topic na existenčne validný Project v stave `forming`, vytvorí jeho počiatočnú vetvu a zachová väzbu na pôvodnú diskusiu.**
 
 ---
 
+## 18. 🧭 Finálna veta
+
+> **Otázky generujú myslenie. Topicy organizujú diskusiu. Project Formation je okamih, keď sa z kolektívneho záujmu stane prvý skutočný projektový objekt.**
+
+```
+
 ---
 
-# 🧭 Finálna veta
+Toto je už verzia, ktorú by som architektovi dal.
 
-👉
-**Ak otázky generujú myslenie, Project Formation generuje realitu.**
+Ešte by som spravil jeden malý follow-up v ďalšom kole:
+- zosúladiť slovník medzi ADR-022, ADR-077 a ADR-078 tak, aby sa všade rovnako používali pojmy:
+  - `candidate_for_project`
+  - `forming`
+  - `active`
+  - `origin_topic_id`
+  - `initial_branch`
 
----
+To je malá vec, ale výrazne znižuje budúci chaos.
 
+Pošli ďalší a upravím ho rovnako.
+```

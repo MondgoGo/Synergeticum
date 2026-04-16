@@ -1,15 +1,3 @@
-Tu je **prepracovaná verzia ADR-077**, zapracovaná podľa tvojho finálneho komentára a upravená tak, aby bola čo najbližšie realite použitia aj budúcej implementácii. Vychádzam z aktuálnej verzie dokumentu , ale mením najmä:
-
-* vstup do projektu pre solo začiatky,
-* definíciu commitmentu,
-* TTL/decay,
-* event-driven revalidáciu,
-* hysterézu,
-* rozdiel medzi existenčnou validitou a operačnou pripravenosťou.
-
----
-
-````md
 # 🧾 ADR-077 — Minimal Viable Project Definition
 
 ## 1. 📌 Status
