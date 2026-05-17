@@ -892,9 +892,8 @@ Ak chceš, ďalší krok spravím veľmi prakticky:
 môžem ti z tohto pripraviť **„Pilot Domain Model Profile“** — teda ktoré entity, polia, vzťahy a stavy naozaj zaviesť v prvej verzii a čo odložiť.
 
 
-Skus zapracovat tvoje proipomienky do 076. 
-Je to dolezite. Daj si pozor. Inak to ze bude domain a entity model neznamena, ze sa to musi aj v pilot realizovat. 
-Chcem to mat co najobsaznejsie, nech sa podchyti komplexity, ktpora sa bude zavadzat postupne. 
+Skus zapracovat tvoje pripomienky do 076.  
+Je to dolezite. Daj si pozor. Chcem to mat co najobsaznejsie, nech sa podchyti komplexity, ktora sa bude zavadzat postupne.  
 Mysli na to. Daj pozor, aby tam bolo vsetko, co treba, toto uz mozno pojde architektovi. 
-Vyledok  by mal byt finalna verziu pre srchitekta!!!
-Tvoje posledne komentare:
+Vyledok  by mal byt finalna verziu pre architekta!!! 
+Tvoje posledne komentare, ktore zapracujes do finalneho dokumentu: 
